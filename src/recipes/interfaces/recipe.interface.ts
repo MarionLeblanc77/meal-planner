@@ -1,4 +1,8 @@
+import { Status } from "../dto/create-recipe.dto.js";
+
 export interface Recipe {
   name: string;
-  basePortion: number;
+  instructions?: string;
+  basePortions?: number;
+  status: Status;
 }

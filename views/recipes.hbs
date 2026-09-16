@@ -1,1 +1,9 @@
-{{ recipesList }}
+<ul>
+  {{#each recipesList}}
+    <li style="list-style-type: none;">
+      <a href="/recipes/{{this.id}}">
+        {{this.name}}
+      </a>
+    </li>
+  {{/each}}
+</ul>

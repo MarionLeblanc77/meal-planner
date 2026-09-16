@@ -1,0 +1,12 @@
+<form action="/recipes/{{recipe.id}}/edit" method="post">
+  {{> form}}
+  <div>
+    <label for="status">Status:</label>
+    <select name="status" id="status">
+      <option value=0 {{#if (eq recipe.status 0)}}selected{{/if}}>To try</option>
+      <option value=1 {{#if (eq recipe.status 1)}}selected{{/if}}>To try again</option>
+      <option value=2 {{#if (eq recipe.status 2)}}selected{{/if}}>OK</option>
+    </select>
+  </div>
+  <button>Change this recipe</button>
+</form>

@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Put, Delete, Body, HttpCode, Param, Query, Render } from '@nestjs/common';
-import { CreateRecipeDto } from './dto/create-recipe.dto.js';
+import { Controller, Get, Post, Put, Delete, Body, HttpCode, Param, Query, Render, Redirect } from '@nestjs/common';
+import { CreateRecipeDto, Status } from './dto/create-recipe.dto.js';
 import { UpdateRecipeDto } from './dto/update-recipe.dto.js';
 import { RecipesService } from './recipes.service.js';
-import { Recipe } from './recipe.entity.js';
 
 //TODO: add exception handling and validation for the controller methods
 
@@ -13,35 +12,49 @@ export class RecipesController {
   @Get()
   @Render('recipes')
   async findAll() {
-    const recipesList = await this.recipesService.findAll();
-    return { recipesList };
+    return { recipesList: await this.recipesService.findAll() };
   }
   
   @Get(':id')
-  async findOne(@Param('id') id: number) : Promise<Recipe | null> {
-    console.log('id', id);
-    return this.recipesService.findOne(id);
+  @Render('recipe')
+  async findOne(@Param('id') id: number) {
+    const recipe = await this.recipesService.findOne(id);
+    return {     
+      recipe: {
+      ...recipe,
+      textStatus: recipe ? Status[recipe.status] : Status[0],
+    }, };
   }
 
-  @Get()
-  findAllWith(@Query('name') name: string, @Query('basePortions') basePortions: number) : string {
-    return `This action will return all recipes filtered by name: ${name} and base portions: ${basePortions}`;
-  }
+  // @Get()
+  // findAllWith(@Query('name') name: string, @Query('basePortions') basePortions: number) : string {
+  //   return `This action will return all recipes filtered by name: ${name} and base portions: ${basePortions}`;
+  // }
 
   @Post()
-  @HttpCode(204)
-  create(@Body() createRecipeDto: CreateRecipeDto) {
-    console.log('createRecipeDto', createRecipeDto);
-    return this.recipesService.create(createRecipeDto);;
+  @Redirect('/recipes', 301)
+  async create(@Body() createRecipeDto: CreateRecipeDto) {
+    await this.recipesService.create(createRecipeDto);
+    return;
   }
 
-  @Put(':id')
+  @Get('/:id/edit')
+  @Render('recipe-edit')
+  async findOneToEdit(@Param('id') id: number) {
+    return { recipe : await this.recipesService.findOne(id) };
+  }
+
+  // TODO : see if it is interesting to use @Put instead of @Post if frontend updates to smt that can differentiate
+  @Post(':id/edit')
+  @Redirect()
   async update(@Param('id') id: number, @Body() updateRecipeDto: UpdateRecipeDto) {
-    return `This action updates the #${id} recipe`;
+    await this.recipesService.update(id, updateRecipeDto);
+    return { statusCode: 301, url: '/recipes/' + id };
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: number) : Promise<void> {
-    return this.recipesService.remove(id);
-  }
+  // TODO : see if it is interesting to use @Put instead of @Post if frontend updates to smt that can differentiate
+  // @Post(':id/delete')
+  // async remove(@Param('id') id: number) : Promise<void> {
+  //   return this.recipesService.remove(id);
+  // }
 }
