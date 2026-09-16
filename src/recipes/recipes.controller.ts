@@ -1,5 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Req, Body, Header, HttpCode, Param, Query } from '@nestjs/common';
-import type { Request } from 'express';
+import { Controller, Get, Post, Put, Delete, Body, HttpCode, Param, Query, Render } from '@nestjs/common';
 import { CreateRecipeDto } from './dto/create-recipe.dto.js';
 import { UpdateRecipeDto } from './dto/update-recipe.dto.js';
 import { RecipesService } from './recipes.service.js';
@@ -12,8 +11,10 @@ export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}
 
   @Get()
-  async findAll() : Promise<Recipe[]> {
-    return this.recipesService.findAll();
+  @Render('recipes')
+  async findAll() {
+    const recipesList = await this.recipesService.findAll();
+    return { recipesList };
   }
   
   @Get(':id')
@@ -29,8 +30,9 @@ export class RecipesController {
 
   @Post()
   @HttpCode(204)
-  async create(@Body() createRecipeDto: CreateRecipeDto) : Promise<Recipe> {
-    return this.recipesService.create(createRecipeDto);
+  create(@Body() createRecipeDto: CreateRecipeDto) {
+    console.log('createRecipeDto', createRecipeDto);
+    return this.recipesService.create(createRecipeDto);;
   }
 
   @Put(':id')

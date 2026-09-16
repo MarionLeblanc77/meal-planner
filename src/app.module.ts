@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RecipesModule } from './recipes/recipes.module.js';
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
 
 @Module({
   imports: [
-    RecipesModule, 
+    RecipesModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -17,9 +19,11 @@ import { RecipesModule } from './recipes/recipes.module.js';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       autoLoadEntities: true,
-      synchronize: true, //TODO: set to false in production
+      synchronize: process.env.ENVIRONMENT === 'dev',
     }),
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 
 export class AppModule {}
