@@ -1,5 +1,5 @@
 <form action="/recipes" method="post">
-  {{> form}}
+  {{> recipeform}}
   <div>
     <label for="status">Status:</label>
     <select name="status" id="status">
@@ -10,3 +10,8 @@
   </div>
   <button>Add this recipe</button>
 </form>
+<form action="/ingredients" method="post">
+  {{> ingredientform}}
+  <button>Add this ingredient</button>
+</form>
+

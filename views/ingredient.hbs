@@ -1,0 +1,13 @@
+<div>
+    <h1>{{ingredient.name}}</h1>
+    <p> On Season ? 
+        <span {{#if ingredient.onSeason}}style="background-color: lightgreen;" {{else}}style="background-color: lightcoral;" {{/if}}>
+            {{#if ingredient.onSeason}}
+                Yes
+            {{else}}
+                No
+            {{/if}} 
+        </span>
+    </p>
+</div>
+<a href="/ingredients/{{ingredient.id}}/edit">Change this ingredient</a>

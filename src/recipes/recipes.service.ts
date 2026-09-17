@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Recipe } from './recipe.entity.js';
+import { Recipe } from './entities/recipe.entity.js';
 import { CreateRecipeDto } from './dto/create-recipe.dto.js';
 import { UpdateRecipeDto } from './dto/update-recipe.dto.js';
 
@@ -13,16 +13,16 @@ export class RecipesService {
     private readonly recipeRepository: Repository<Recipe>,
   ) {}
 
+  async create(createRecipeDto: CreateRecipeDto): Promise<void> {
+    await this.recipeRepository.save(createRecipeDto);
+  }
+
   async findAll(): Promise<Recipe[]> {
     return await this.recipeRepository.find();
   }
 
   async findOne(id: number): Promise<Recipe | null> {
     return await this.recipeRepository.findOneBy({ id });
-  }
-
-  async create(createRecipeDto: CreateRecipeDto): Promise<void> {
-    await this.recipeRepository.save(createRecipeDto);
   }
 
   async update(id: number, updateRecipeDto: UpdateRecipeDto): Promise<void> {

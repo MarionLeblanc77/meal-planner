@@ -21,6 +21,7 @@ async function bootstrap() {
   app.setViewEngine('hbs');
   hbs.registerPartials(join(import.meta.dirname, '..', 'views', 'partials'))
   hbs.registerHelper('eq', (a, b) => a === b);
+  hbs.registerHelper('isdefined', (value) => { return value !== undefined });
   
   await app.listen(process.env.PORT ?? 3000);
   console.log(`Application is running on: ${await app.getUrl()}`);

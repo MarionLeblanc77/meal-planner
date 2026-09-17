@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RecipesController } from './recipes.controller.js';
 import { RecipesService } from './recipes.service.js';
-import { Recipe } from './recipe.entity.js';
+import { Recipe } from './entities/recipe.entity.js';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Recipe])],

@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RecipesModule } from './recipes/recipes.module.js';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
+import { IngredientsModule } from './ingredients/ingredients.module.js';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AppService } from './app.service.js';
       autoLoadEntities: true,
       synchronize: process.env.ENVIRONMENT === 'dev',
     }),
+    IngredientsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
