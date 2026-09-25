@@ -15,7 +15,7 @@ export class Recipe {
   basePortions?: number;
 
   @Column("int")
-  status: number;
+  status: TrialStatus;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -25,4 +25,10 @@ export class Recipe {
 
   @DeleteDateColumn()
   deletedAt: Date;
+}
+
+export enum TrialStatus {
+  'To try' = 0,
+  'To try again' = 1,
+  'OK' = 2,
 }

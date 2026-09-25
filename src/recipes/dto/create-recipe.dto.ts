@@ -1,11 +1,6 @@
 import { IsString, IsOptional, IsInt, Length, IsEnum } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
-
-export enum Status {
-  'To try' = 0,
-  'To try again' = 1,
-  'OK' = 2,
-}
+import { TrialStatus } from '../entities/recipe.entity.js';
 
 export class CreateRecipeDto {
   @IsString()
@@ -24,6 +19,6 @@ export class CreateRecipeDto {
 
   
   @Type(() => Number)
-  @IsEnum(Status)
-  status: Status;
+  @IsEnum(TrialStatus)
+  status: TrialStatus;
 }

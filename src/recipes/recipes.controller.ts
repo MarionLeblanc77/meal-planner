@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Put, Delete, Body, HttpCode, Param, Query, Render, Redirect, NotFoundException } from '@nestjs/common';
-import { CreateRecipeDto, Status } from './dto/create-recipe.dto.js';
+import { CreateRecipeDto } from './dto/create-recipe.dto.js';
 import { UpdateRecipeDto } from './dto/update-recipe.dto.js';
 import { RecipesService } from './recipes.service.js';
-import { Recipe } from './entities/recipe.entity.js';
+import { Recipe, TrialStatus } from './entities/recipe.entity.js';
 
 interface RecipeViewModel extends Recipe {
   textStatus: string;
@@ -36,7 +36,8 @@ export class RecipesController {
     return {     
       recipe: {
       ...recipe,
-      textStatus: recipe ? Status[recipe.status] : Status[0],
+      //todo return a DTO -> remove this logic from the controller
+      textStatus: recipe ? TrialStatus[recipe.status] : TrialStatus[0],
     }, };
   }
 
