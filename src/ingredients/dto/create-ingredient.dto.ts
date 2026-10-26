@@ -1,5 +1,6 @@
-import { IsString, IsOptional, Length, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, Length, IsBoolean, IsArray } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { Recipe } from '../../recipes/entities/recipe.entity.js';
 
 export class CreateIngredientDto {
     @IsString()
@@ -10,4 +11,8 @@ export class CreateIngredientDto {
     @IsOptional()
     @IsBoolean ()
     onSeason: boolean;
+
+    @IsArray()
+    @IsOptional()
+    recipes: Recipe[];
 }

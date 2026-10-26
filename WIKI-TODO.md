@@ -12,8 +12,6 @@ Common decision 26/09/17 :
 
 - How to handle user data : 1 database per user or a join table
 
-
 ## Design / Features
 
 - Last added, last seen and top used the past rolling 6 months on the meal planning page
-

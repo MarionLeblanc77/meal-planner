@@ -1,5 +1,6 @@
-import { IsString, IsOptional, IsInt, Length, IsEnum } from 'class-validator';
+import { IsString, IsOptional, IsInt, Length, IsEnum, IsArray } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
+import { Ingredient } from '../../ingredients/entities/ingredient.entity.js';
 
 export enum Status {
   'To try' = 0,
@@ -22,8 +23,11 @@ export class CreateRecipeDto {
   @IsInt()
   basePortions?: number;
 
-  
   @Type(() => Number)
   @IsEnum(Status)
   status: Status;
+  
+  @IsArray()
+  @IsOptional()
+  ingredients: Ingredient[];
 }

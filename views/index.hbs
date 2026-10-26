@@ -1,17 +1,24 @@
-<form action="/recipes" method="post">
-  {{> recipeform}}
-  <div>
-    <label for="status">Status:</label>
-    <select name="status" id="status">
-      <option value="0" selected>To Try</option>
-      <option value="1">To Try Again</option>
-      <option value="2">OK</option>
-    </select>
+  <div style="border: solid 1px black; padding: 5px; margin: 10px">
+    <form action="/recipes" method="post">
+      {{> recipeform}}
+      <div>
+        <label for="status">Status:</label>
+        <select name="status" id="status">
+          <option value="0" selected>To Try</option>
+          <option value="1">To Try Again</option>
+          <option value="2">OK</option>
+        </select>
+      </div>
+      <div>
+        //TODO: add a way to select ingredients for the recipe
+      </div>
+      <button>Add this recipe</button>
+    </form>
   </div>
-  <button>Add this recipe</button>
-</form>
-<form action="/ingredients" method="post">
-  {{> ingredientform}}
-  <button>Add this ingredient</button>
-</form>
+  <div style="border: solid 1px black; padding: 5px; margin: 10px">
+    <form action="/ingredients" method="post">
+      {{> ingredientform}}
+      <button>Add this ingredient</button>
+    </form>
+  </div>
 

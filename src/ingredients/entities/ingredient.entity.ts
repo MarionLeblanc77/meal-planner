@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn, UpdateDateColumn, CreateDateColumn, VersionColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn, UpdateDateColumn, CreateDateColumn, ManyToMany } from 'typeorm';
+import { Recipe } from '../../recipes/entities/recipe.entity.js';
 
 @Entity()
 export class Ingredient {
@@ -10,6 +11,9 @@ export class Ingredient {
   
   @Column("boolean")  
   onSeason: boolean;
+
+  @ManyToMany(() => Recipe, (recipe) => recipe.ingredients)
+  recipes: Recipe[];
 
   @CreateDateColumn()
   createdAt: Date;
