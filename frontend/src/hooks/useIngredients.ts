@@ -30,20 +30,6 @@ export function useIngredient(id: number | undefined) {
   })
 }
 
-// async function editIngredient(id: number, updateData: Ingredient): Promise<Ingredient> {
-//   const result = await axiosInstance.post(`http://[::1]:3000/ingredients/${id}/edit`, updateData);
-//   return result.data;
-// }
-
-// export function useEditIngredient(id: number | undefined, updateData: Ingredient) {
-//   return useQuery({
-//     queryKey: ['ingredients', id],
-//     queryFn: id === undefined ? skipToken : () => editIngredient(id, updateData),
-//     staleTime: 1000 * 60 * 2,
-//     select: (data) => data
-//   })
-// }
-
 async function createOrEditIngredient(id: number | undefined, ingredientData: IngredientInput): Promise<Ingredient> {
   const result = await axiosInstance.post(`http://[::1]:3000/ingredients/${id ? id + '/edit' : ''}`, ingredientData);
   return result.data;

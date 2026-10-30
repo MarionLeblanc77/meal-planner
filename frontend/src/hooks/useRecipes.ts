@@ -1,6 +1,6 @@
-import { skipToken, useQuery } from '@tanstack/react-query'
+import { skipToken, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { axiosInstance } from '../utils/axios'
-import type { Recipe } from '../types/recipe';
+import type { Recipe, RecipeInput } from '../types/recipe';
 
 async function fetchRecipes(): Promise<Recipe[]> {
   const result = await axiosInstance.get("http://[::1]:3000/recipes/");
@@ -27,5 +27,24 @@ export function useRecipe(id: number | undefined) {
     queryFn: id === undefined ? skipToken : () => fetchRecipe(id),
     staleTime: 1000 * 60 * 2,
     select: (data) => data
+  })
+}
+
+async function createOrEditRecipe(id: number | undefined, recipeData: RecipeInput): Promise<Recipe> {
+  const result = await axiosInstance.post(`http://[::1]:3000/recipes/${id ? id + '/edit' : ''}`, recipeData);
+  return result.data;
+}
+
+export function useCreateOrEditRecipe(id: number | undefined) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (recipeData: RecipeInput) => createOrEditRecipe(id, recipeData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['recipes'] })
+    },
+    onError: (error) => {
+      console.error('Mutation échouée:', error.message)
+    },
   })
 }
