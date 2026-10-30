@@ -4,10 +4,6 @@ import { UpdateRecipeDto } from './dto/update-recipe.dto.js';
 import { RecipesService } from './recipes.service.js';
 import { Recipe } from './entities/recipe.entity.js';
 
-interface RecipeViewModel extends Recipe {
-  textStatus: string;
-}
-
 //TODO: add exception handling and validation for the controller methods
 @Controller('recipes')
 export class RecipesController {
@@ -21,23 +17,20 @@ export class RecipesController {
   }
 
   @Get()
-  @Render('recipes')
-  async findAll() : Promise<{ recipesList: Recipe[] }> {
-    return { recipesList: await this.recipesService.findAll() };
+  // @Render('recipes')
+  async findAll() : Promise<Recipe[]> {
+    return await this.recipesService.findAll();
   }
   
   @Get(':id')
-  @Render('recipe')
-  async findOne(@Param('id') id: number) : Promise<{ recipe: RecipeViewModel }> {
+  // @Render('recipe')
+  async findOne(@Param('id') id: number) : Promise<Recipe> {
     const recipe = await this.recipesService.findOne(id);
     if (!recipe) {
       throw new NotFoundException(`Recipe #${id} not found`);
-    }
-    return {     
-      recipe: {
-      ...recipe,
-      textStatus: recipe ? Status[recipe.status] : Status[0],
-    }, };
+    } else { 
+      return recipe 
+    };
   }
 
   // TODO: do the route for ingredient filter

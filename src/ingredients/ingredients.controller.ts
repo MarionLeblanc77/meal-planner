@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Render, Redirect } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Render, Redirect, NotFoundException } from '@nestjs/common';
 import { IngredientsService } from './ingredients.service.js';
 import { CreateIngredientDto } from './dto/create-ingredient.dto.js';
 import { UpdateIngredientDto } from './dto/update-ingredient.dto.js';
@@ -17,15 +17,19 @@ export class IngredientsController {
   }
 
   @Get()
-  @Render('ingredients')
-  async findAll() : Promise<{ ingredientsList: Ingredient[] }>  {
-    return { ingredientsList: await this.ingredientsService.findAll() };
+  // @Render('ingredients')
+  async findAll() : Promise<Ingredient[]>  {
+    return await this.ingredientsService.findAll();
   }
-
+  
   @Get(':id')
-  @Render('ingredient')
-  async findOne(@Param('id') id: number) : Promise<{ ingredient: Ingredient | null }> {
-    return { ingredient: await this.ingredientsService.findOne(id) };
+  // @Render('ingredient')
+  async findOne(@Param('id') id: number) : Promise<Ingredient> {
+    const ingredient = await this.ingredientsService.findOne(id);
+    if (!ingredient) {
+      throw new NotFoundException(`Ingredient #${id} not found`);
+    }
+    return ingredient;
   }
   
   @Get('/:id/edit')

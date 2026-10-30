@@ -2,10 +2,10 @@ import { IsString, IsOptional, IsInt, Length, IsEnum, IsArray } from 'class-vali
 import { Transform, Type } from 'class-transformer';
 import { Ingredient } from '../../ingredients/entities/ingredient.entity.js';
 
-export enum Status {
-  'To try' = 0,
-  'To try again' = 1,
-  'OK' = 2,
+export enum RecipeStatus {
+  'Totry' = 0,
+  'ToTryAgain' = 1,
+  'Ok' = 2,
 }
 
 export class CreateRecipeDto {
@@ -24,8 +24,8 @@ export class CreateRecipeDto {
   basePortions?: number;
 
   @Type(() => Number)
-  @IsEnum(Status)
-  status: Status;
+  @IsEnum(RecipeStatus)
+  status: RecipeStatus;
   
   @IsArray()
   @IsOptional()

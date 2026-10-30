@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {
+    "launch:dev":" docker compose up -d && start \"Backend\" cmd /k \"npm run start:dev\" && start \"Frontend\" cmd /k \"cd /d frontend && npm run dev\"",
     "build": "nest build",
     "deploy": "nest deploy",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

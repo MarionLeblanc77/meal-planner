@@ -9,6 +9,7 @@ import "reflect-metadata";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    cors: true,
     abortOnError: false,
     routeConflictPolicy: { duplicate: 'warn', shadow: 'warn' },
     routeResolutionStrategy: 'specificity',

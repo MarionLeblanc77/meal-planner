@@ -1,22 +1,26 @@
 import { Link } from "react-router-dom";
+import { useRecipes } from '../../hooks/useRecipes'
+import type { Recipe } from "../../types/recipe";
 
 function Recipes() {
-  const recipes = [
-    { id: 1, name: "Spaghetti Bolognese" },
-    { id: 2, name: "Chicken Curry" },
-    { id: 3, name: "Vegetable Stir Fry" },
-  ];
+  const { data: recipes, isLoading, isError, error, isFetching } = useRecipes()
+
+  if (isLoading) return <div className="spinner">Loading...</div>
+  if (isError) return <div className="error">Error : {error.message}</div>
 
   return (
-    <ul>
-      {recipes.map((recipe) => (
-        <li key={recipe.id} style={{ listStyleType: "none"}}>
-          <Link to={`/recipes/${recipe.id}`}>
-            {recipe.name}
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <>
+      {isFetching && <span className="refetch-indicator">Mise à jour...</span>}
+      <ul>
+        {recipes?.map((recipe: Recipe) => (
+          <li key={recipe.id} style={{ listStyleType: "none"}}>
+            <Link to={`/recipes/${recipe.id}`}>
+              {recipe.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </>
   )
 }
 
