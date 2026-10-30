@@ -10,10 +10,9 @@ export class IngredientsController {
   constructor(private readonly ingredientsService: IngredientsService) {}
 
   @Post()
-  @Redirect('/ingredients', 301)
-  async create(@Body() createIngredientDto: CreateIngredientDto) : Promise<void> {
-    await this.ingredientsService.create(createIngredientDto);
-    return;
+  // @Redirect('/ingredients', 301)
+  async create(@Body() createIngredientDto: CreateIngredientDto) : Promise< Ingredient> {
+    return await this.ingredientsService.create(createIngredientDto);
   }
 
   @Get()
@@ -31,16 +30,10 @@ export class IngredientsController {
     }
     return ingredient;
   }
-  
-  @Get('/:id/edit')
-  @Render('ingredient-edit')
-  async findOneToEdit(@Param('id') id: number): Promise<{ ingredient: Ingredient | null }> {
-    return { ingredient : await this.ingredientsService.findOne(id) };
-  }
 
   // TODO : see if it is interesting to use @Put instead of @Post if frontend updates to smt that can differentiate
   @Post(':id/edit')
-  @Redirect()
+  // @Redirect()
   async update(@Param('id') id: number, @Body() updateIngredientDto: UpdateIngredientDto) : Promise<{ statusCode: number; url: string; }> {
     this.ingredientsService.update(id, updateIngredientDto);
     return { statusCode: 301, url: '/ingredients/' + id };

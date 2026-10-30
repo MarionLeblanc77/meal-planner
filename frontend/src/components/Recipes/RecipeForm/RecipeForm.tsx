@@ -13,7 +13,6 @@ function RecipeForm() {
     // fetch('/some-api', { method: form.method, body: formData });
 
     const formJson = Object.fromEntries(formData.entries());
-    console.log(formJson);
     navigate('/recipes');
 
   }
@@ -47,7 +46,7 @@ function RecipeForm() {
       <div>
         //TODO: add a way to select ingredients for the recipe
       </div>
-      <button>Add this recipe</button>
+      <button>{window.location.href.includes('edit') ? 'Update this recipe' : 'Add this recipe'}</button>
     </form>
   )
 }

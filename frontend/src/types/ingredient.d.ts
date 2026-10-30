@@ -4,3 +4,8 @@ export interface Ingredient {
   onSeason?: boolean
   recipes: Recipe[]
 }
+
+export type IngredientInput = {
+  name?: Ingredient['name']
+  onSeason?: Ingredient['onSeason']
+}

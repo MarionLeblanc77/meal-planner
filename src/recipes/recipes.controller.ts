@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Put, Delete, Body, HttpCode, Param, Query, Render, Redirect, NotFoundException } from '@nestjs/common';
-import { CreateRecipeDto, Status } from './dto/create-recipe.dto.js';
+import { CreateRecipeDto, RecipeStatus } from './dto/create-recipe.dto.js';
 import { UpdateRecipeDto } from './dto/update-recipe.dto.js';
 import { RecipesService } from './recipes.service.js';
 import { Recipe } from './entities/recipe.entity.js';

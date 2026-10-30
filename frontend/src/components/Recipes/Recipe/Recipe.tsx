@@ -9,8 +9,6 @@ function Recipe() {
   if (isLoading) return <div className="spinner">Loading...</div>
   if (isError) return <div className="error">Error : {error.message}</div>
 
-  console.log("Recipe data:", recipe); // Log the recipe data for debugging
-
   return (
     <>
       {isFetching && <span className="refetch-indicator">Mise à jour...</span>}

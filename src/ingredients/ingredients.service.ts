@@ -12,8 +12,8 @@ export class IngredientsService {
     private readonly ingredientRepository: Repository<Ingredient>,
   ) {}
 
-  async create(createIngredientDto: CreateIngredientDto): Promise<void>{
-    await this.ingredientRepository.save(createIngredientDto);
+  async create(createIngredientDto: CreateIngredientDto): Promise<Ingredient>{
+    return await this.ingredientRepository.save(createIngredientDto);
   }
 
   async findAll(): Promise<Ingredient[]> {

@@ -7,7 +7,6 @@ export class CreateIngredientDto {
     @Length(1, 255)
     name: string;
     
-    @Transform(({ value }) => (value === 'false' ? false : true))
     @IsOptional()
     @IsBoolean ()
     onSeason: boolean;
