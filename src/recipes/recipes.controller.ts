@@ -10,7 +10,7 @@ export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}
 
   @Post()
-  @Redirect('/recipes', 301)
+  // @Redirect('/recipes', 301)
   async create(@Body() createRecipeDto: CreateRecipeDto) : Promise<void>  {
     await this.recipesService.create(createRecipeDto);
     return;

@@ -22,7 +22,10 @@ export class RecipesService {
   }
 
   async findOne(id: number): Promise<Recipe | null> {
-    return await this.recipeRepository.findOneBy({ id });
+    return await this.recipeRepository.findOne({
+      where: { id },
+      relations: { ingredients: true },
+    });
   }
 
   async update(id: number, updateRecipeDto: UpdateRecipeDto): Promise<void> {

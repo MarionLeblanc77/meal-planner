@@ -9,7 +9,7 @@ export class CreateIngredientDto {
     
     @IsOptional()
     @IsBoolean ()
-    onSeason: boolean;
+    onSeason: boolean = true;
 
     @IsArray()
     @IsOptional()

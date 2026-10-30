@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn, UpdateDateColumn, CreateDateColumn, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn, UpdateDateColumn, CreateDateColumn, ManyToMany, JoinTable } from 'typeorm';
 import { Ingredient } from '../../ingredients/entities/ingredient.entity.js';
 
 @Entity()
@@ -15,7 +15,8 @@ export class Recipe {
   @Column("int", { nullable: true })
   basePortions?: number;
 
-  @ManyToMany(() => Ingredient, (ingredient) => ingredient.recipes)
+  @ManyToMany(() => Ingredient, (ingredient) => ingredient.recipes, { cascade: ['insert'] })
+  @JoinTable()
   ingredients: Ingredient[];
 
   @Column("int")

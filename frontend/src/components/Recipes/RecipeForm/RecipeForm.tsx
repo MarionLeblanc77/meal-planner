@@ -1,14 +1,16 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useCreateOrEditRecipe, useRecipe } from "../../../hooks/useRecipes";
 import type { Recipe } from "../../../types/recipe";
+import type { IngredientInput } from "../../../types/ingredient";
+import { useState } from "react";
 
 function RecipeForm() {
   const navigate = useNavigate();
   const { recipeId } = useParams();
-
   const { data: recipe, isLoading, isError, error, isFetching } = useRecipe(recipeId ? parseInt(recipeId) : undefined);
-
   const createOrEditRecipe = useCreateOrEditRecipe(recipeId ? parseInt(recipeId) : undefined);
+  const [ingredients, setIngredients] = useState<Recipe['ingredients']>([]);
+  const [searchedIngredient, setSearchedingredient] = useState<string>('');
 
   if (isLoading) return <div className="spinner">Loading...</div>
   if (isError) return <div className="error">Error : {error.message}</div>
@@ -21,8 +23,17 @@ function RecipeForm() {
       instructions: formData.get('instructions') as Recipe['instructions'],
       basePortions: formData.get('basePortions') ? parseInt(formData.get('basePortions') as string) : 0 as Recipe['basePortions'],
       status: formData.get('status') as Recipe['status'],
+      ingredients: ingredients
     })
     navigate('/recipes');
+  }
+
+  const addIngredient = () => {
+    if (searchedIngredient.trim() !== '') {
+      const newIngredient: IngredientInput = { name: searchedIngredient.trim() };
+      setIngredients([...ingredients, newIngredient]);
+      setSearchedingredient('');
+    }
   }
 
   return (
@@ -54,7 +65,15 @@ function RecipeForm() {
           </label>
         </div>
         <div>
-          //TODO: add a way to select ingredients for the recipe
+          <label>Ingredients:
+            <input type="text" name="ingredient" id="ingredient" onChange={(e) => setSearchedingredient(e.target.value )} value={searchedIngredient} />
+            <button type="button" onClick={addIngredient}>+</button>
+            <ul>
+              {ingredients.map((ingredient, index) => (
+                <li key={index}>{ingredient.name}</li>
+              ))}
+            </ul>
+          </label>
         </div>
         <button>{window.location.href.includes('edit') ? 'Update this recipe' : 'Add this recipe'}</button>
       </form>

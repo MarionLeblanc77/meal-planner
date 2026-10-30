@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useRecipe } from "../../../hooks/useRecipes";
-import recipeStatusLabels from "../../../types/recipe";
+import recipeStatusLabels from "../../../types/recipe-status";
 
 function Recipe() {
   const { recipeId } = useParams();
@@ -18,6 +18,11 @@ function Recipe() {
               <h1>{recipe.name}</h1>
               <p> Base Portions: {recipe.basePortions}</p>
               <p> Status: {recipeStatusLabels[recipe.status]}</p>
+              <ul>
+                {recipe.ingredients.map((ingredient) => (
+                  <li key={ingredient.id}>{ingredient.name}</li>
+                ))}
+              </ul>
           </div>
           <Link to={`/recipes/${recipe.id}/edit`}>Change this recipe</Link>
         </>

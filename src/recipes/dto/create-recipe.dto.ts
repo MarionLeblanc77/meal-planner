@@ -1,6 +1,7 @@
-import { IsString, IsOptional, IsInt, Length, IsEnum, IsArray } from 'class-validator';
+import { IsString, IsOptional, IsInt, Length, IsEnum, IsArray, ValidateNested } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { Ingredient } from '../../ingredients/entities/ingredient.entity.js';
+import { CreateIngredientDto } from '../../ingredients/dto/create-ingredient.dto.js';
 
 export enum RecipeStatus {
   'Totry' = 0,
@@ -25,9 +26,11 @@ export class CreateRecipeDto {
 
   @Type(() => Number)
   @IsEnum(RecipeStatus)
-  status: RecipeStatus;
+  status: RecipeStatus = RecipeStatus.Totry;
   
   @IsArray()
   @IsOptional()
-  ingredients: Ingredient[];
+  @ValidateNested({ each: true })
+  @Type(() => CreateIngredientDto)
+  ingredients: CreateIngredientDto[];
 }
