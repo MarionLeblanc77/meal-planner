@@ -1,10 +1,12 @@
 import { Link, useParams } from "react-router-dom";
-import { useIngredient } from "../../../hooks/useIngredients";
+import { useDeleteIngredient, useIngredient } from "../../../hooks/useIngredients";
 
 function Ingredient() {
   const { ingredientId } = useParams();
 
   const { data: ingredient, isLoading, isError, error, isFetching } = useIngredient(ingredientId ? parseInt(ingredientId) : undefined);
+  // TODO?: Make a unique delete button component if it makes sens visually
+  const deleteIngredient = useDeleteIngredient();
     
   if (isLoading) return <div className="spinner">Loading...</div>
   if (isError) return <div className="error">Error : {error.message}</div>
@@ -16,6 +18,8 @@ function Ingredient() {
         <>
           <div>
             <h1>{ingredient.name}</h1>
+            {/* TODO?: Make a unique delete button component if it makes sens visually */}
+            <button type="button" onClick={() => deleteIngredient.mutate(ingredient.id)}>X</button>
             <p> On Season ? 
               {ingredient.onSeason ? 
                 <span style={{ backgroundColor: "lightgreen" }}>Yes</span> 

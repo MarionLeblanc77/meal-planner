@@ -39,9 +39,8 @@ export class IngredientsController {
     return { statusCode: 301, url: '/ingredients/' + id };
   }
 
-  // TODO : see if it is interesting to use @Put instead of @Post if frontend updates to smt that can differentiate
-  // @Post(':id/delete')
-  // remove(@Param('id') id: string) : Promise<void>  {
-  //   return this.ingredientsService.remove(id);
-  // }
+  @Delete(':id/delete')
+  async remove(@Param('id') id: number) : Promise<void>  {
+    return this.ingredientsService.remove(id);
+  }
 }

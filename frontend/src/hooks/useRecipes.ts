@@ -48,3 +48,21 @@ export function useCreateOrEditRecipe(id: number | undefined) {
     },
   })
 }
+
+async function deleteRecipe(id: number): Promise<void> {
+  await axiosInstance.delete(`http://[::1]:3000/recipes/${id}/delete`);
+}
+
+export function useDeleteRecipe() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (id: number) => deleteRecipe(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['recipes'] })
+    },
+    onError: (error) => {
+      console.error('Mutation échouée:', error.message)
+    },
+  })
+}
