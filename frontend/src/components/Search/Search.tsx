@@ -4,14 +4,14 @@ import type { SearchProps, Searchable } from '../../types/search'
 interface SearchComponentProps<T extends Searchable> {
   fetchHook: SearchProps<T>['fetchHook'];
   emptySearchMsg: string;
-  onClickLabel?: ((searchItem: string) => void) | undefined;
+  onClickLabel?: ({searchItemID, searchItem}: {searchItemID: number | undefined, searchItem: string}) => void | undefined;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
 function Search<T extends Searchable>({ fetchHook, emptySearchMsg = 'No items found', onClickLabel = undefined, inputProps = {} }: SearchComponentProps<T>) {
   const [isActive, setIsActive] = useState<boolean>(false)
   const [searchItem, setSearchItem] = useState<string>('')
-  const { data, isLoading, isError, error } = fetchHook  
+  const { data, isLoading, isError, error } = fetchHook 
   const items = data ?? []
   const searchTerm = searchItem.trim().toLowerCase()
   const filteredItems = items.filter(item =>
@@ -36,7 +36,10 @@ function Search<T extends Searchable>({ fetchHook, emptySearchMsg = 'No items fo
         <button 
           type="button"   
           onMouseDown={event => event.preventDefault()}
-          onClick={() => onClickLabel?.(searchItem)}
+          onClick={() => {
+            onClickLabel?.({searchItemID: undefined, searchItem})
+            setSearchItem('')
+          }}
         >
           +
         </button>
@@ -50,7 +53,10 @@ function Search<T extends Searchable>({ fetchHook, emptySearchMsg = 'No items fo
                 <button 
                   type="button"   
                   onMouseDown={event => event.preventDefault()}
-                  onClick={() => onClickLabel?.(item.name)}
+                  onClick={() => {
+                    onClickLabel?.({searchItemID: item.id, searchItem: item.name})
+                    setSearchItem('')
+                  }}
                 >
                   + {item.name}
                 </button>

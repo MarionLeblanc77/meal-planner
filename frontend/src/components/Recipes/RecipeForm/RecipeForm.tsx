@@ -12,7 +12,7 @@ function RecipeForm() {
   const { data: recipe, isLoading, isError, error, isFetching } = useRecipe(recipeId ? parseInt(recipeId) : undefined);
   const ingredientsQuery = useIngredients()
   const createOrEditRecipe = useCreateOrEditRecipe(recipeId ? parseInt(recipeId) : undefined);
-  const [ingredients, setIngredients] = useState<Recipe['ingredients']>([]);
+  const [ingredients, setIngredients] = useState<Recipe['ingredients']>(recipe?.ingredients ?? []);
 
   if (isLoading) return <div className="spinner">Loading...</div>
   if (isError) return <div className="error">Error : {error.message}</div>
@@ -20,7 +20,6 @@ function RecipeForm() {
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget);
-    console.log('ingredients', ingredients);
     createOrEditRecipe.mutate({
       name: formData.get('name') as Recipe['name'],
       instructions: formData.get('instructions') as Recipe['instructions'],
@@ -31,10 +30,10 @@ function RecipeForm() {
     navigate('/recipes');
   }
 
-  const addIngredient = (searchItem: string) => {
+  const addIngredient = ({searchItemID, searchItem}: {searchItemID: number | undefined, searchItem: string}) => {
     if (searchItem.trim() !== '') {
-      const newIngredient: IngredientInput = { name: searchItem.trim() };
-      setIngredients([...ingredients, newIngredient]);
+      const newIngredient: IngredientInput = { id: searchItemID, name: searchItem.trim() };
+      setIngredients([...ingredients, newIngredient]);      
     }
   }
 
@@ -71,7 +70,7 @@ function RecipeForm() {
         </div>
         <div>
           <label>Ingredients:
-            <Search fetchHook={ingredientsQuery} emptySearchMsg="No ingredients found" onClickLabel={(searchItem) => addIngredient(searchItem)} inputProps={{ name: "ingredient", id: "ingredient" }} />
+            <Search fetchHook={ingredientsQuery} emptySearchMsg="No ingredients found" onClickLabel={({searchItemID, searchItem}) => addIngredient({searchItemID, searchItem})} inputProps={{ name: "ingredient", id: "ingredient" }} />
             <ul>
               {ingredients.map((ingredient, index) => (
                 <li key={index}>{ingredient.name}</li>

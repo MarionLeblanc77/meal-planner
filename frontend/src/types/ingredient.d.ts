@@ -6,6 +6,7 @@ export interface Ingredient {
 }
 
 export type IngredientInput = {
+  id?: Ingredient['id']
   name?: Ingredient['name']
   onSeason?: Ingredient['onSeason']
 }
