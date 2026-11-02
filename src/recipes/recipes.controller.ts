@@ -17,13 +17,11 @@ export class RecipesController {
   }
 
   @Get()
-  // @Render('recipes')
   async findAll() : Promise<Recipe[]> {
     return await this.recipesService.findAll();
   }
   
   @Get(':id')
-  // @Render('recipe')
   async findOne(@Param('id') id: number) : Promise<Recipe> {
     const recipe = await this.recipesService.findOne(id);
     if (!recipe) {
@@ -33,24 +31,22 @@ export class RecipesController {
     };
   }
 
-  // TODO: do the route for ingredient filter
+  // TODO: do the route for recipe filter
   // @Get()
   // findAllWith(@Query('name') name: string, @Query('basePortions') basePortions: number) : string {
   //   return `This action will return all recipes filtered by name: ${name} and base portions: ${basePortions}`;
   // }
 
   @Get('/:id/edit')
-  @Render('recipe-edit')
   async findOneToEdit(@Param('id') id: number) : Promise<{ recipe: Recipe | null }> {
     return { recipe : await this.recipesService.findOne(id) };
   }
 
   // TODO : see if it is interesting to use @Put instead of @Post if frontend updates to smt that can differentiate
   @Post(':id/edit')
-  @Redirect()
-  async update(@Param('id') id: number, @Body() updateRecipeDto: UpdateRecipeDto) : Promise<{ statusCode: number; url: string; }> {
+  async update(@Param('id') id: number, @Body() updateRecipeDto: UpdateRecipeDto) : Promise<void> {
     await this.recipesService.update(id, updateRecipeDto);
-    return { statusCode: 301, url: '/recipes/' + id };
+    return;
   }
 
   @Delete(':id/delete')

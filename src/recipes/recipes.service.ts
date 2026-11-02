@@ -29,7 +29,7 @@ export class RecipesService {
   }
 
   async update(id: number, updateRecipeDto: UpdateRecipeDto): Promise<void> {
-    await this.recipeRepository.update(id, updateRecipeDto);
+    await this.recipeRepository.save({ id, ...updateRecipeDto });
   }
 
   async remove(id: number): Promise<void> {
