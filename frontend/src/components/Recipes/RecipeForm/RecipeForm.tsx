@@ -1,16 +1,18 @@
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Search from "../../Search/Search";
+import { useIngredients } from "../../../hooks/useIngredients";
 import { useCreateOrEditRecipe, useRecipe } from "../../../hooks/useRecipes";
 import type { Recipe } from "../../../types/recipe";
 import type { IngredientInput } from "../../../types/ingredient";
-import { useState } from "react";
 
 function RecipeForm() {
   const navigate = useNavigate();
   const { recipeId } = useParams();
   const { data: recipe, isLoading, isError, error, isFetching } = useRecipe(recipeId ? parseInt(recipeId) : undefined);
+  const ingredientsQuery = useIngredients()
   const createOrEditRecipe = useCreateOrEditRecipe(recipeId ? parseInt(recipeId) : undefined);
   const [ingredients, setIngredients] = useState<Recipe['ingredients']>([]);
-  const [searchedIngredient, setSearchedingredient] = useState<string>('');
 
   if (isLoading) return <div className="spinner">Loading...</div>
   if (isError) return <div className="error">Error : {error.message}</div>
@@ -18,6 +20,7 @@ function RecipeForm() {
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget);
+    console.log('ingredients', ingredients);
     createOrEditRecipe.mutate({
       name: formData.get('name') as Recipe['name'],
       instructions: formData.get('instructions') as Recipe['instructions'],
@@ -28,13 +31,15 @@ function RecipeForm() {
     navigate('/recipes');
   }
 
-  const addIngredient = () => {
-    if (searchedIngredient.trim() !== '') {
-      const newIngredient: IngredientInput = { name: searchedIngredient.trim() };
+  const addIngredient = (searchItem: string) => {
+    if (searchItem.trim() !== '') {
+      const newIngredient: IngredientInput = { name: searchItem.trim() };
       setIngredients([...ingredients, newIngredient]);
-      setSearchedingredient('');
     }
   }
+
+  {/* TODO!:  Behavior if ingredient is not in the list + change put if ingredient is already in the database ? */}
+
 
   return (
     <>
@@ -66,8 +71,7 @@ function RecipeForm() {
         </div>
         <div>
           <label>Ingredients:
-            <input type="text" name="ingredient" id="ingredient" onChange={(e) => setSearchedingredient(e.target.value )} value={searchedIngredient} />
-            <button type="button" onClick={addIngredient}>+</button>
+            <Search fetchHook={ingredientsQuery} emptySearchMsg="No ingredients found" onClickLabel={(searchItem) => addIngredient(searchItem)} inputProps={{ name: "ingredient", id: "ingredient" }} />
             <ul>
               {ingredients.map((ingredient, index) => (
                 <li key={index}>{ingredient.name}</li>
