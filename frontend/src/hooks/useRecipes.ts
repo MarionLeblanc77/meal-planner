@@ -66,3 +66,21 @@ export function useDeleteRecipe() {
     },
   })
 }
+
+async function deleteIngredientFromRecipe(recipeId: number, ingredientId: number): Promise<void> {
+  await axiosInstance.delete(`http://[::1]:3000/recipes/${recipeId}/ingredients/${ingredientId}/delete`);
+}
+
+export function useDeleteIngredientFromRecipe() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ recipeId, ingredientId }: { recipeId: number; ingredientId: number }) => deleteIngredientFromRecipe(recipeId, ingredientId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['recipes', 'ingredients'] })
+    },
+    onError: (error) => {
+      console.error('Mutation échouée:', error.message)
+    },
+  })
+}

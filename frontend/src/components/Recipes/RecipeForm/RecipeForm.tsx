@@ -73,7 +73,10 @@ function RecipeForm() {
             <Search fetchHook={ingredientsQuery} emptySearchMsg="No ingredients found" onClickLabel={({searchItemID, searchItem}) => addIngredient({searchItemID, searchItem})} inputProps={{ name: "ingredient", id: "ingredient" }} />
             <ul>
               {ingredients.map((ingredient, index) => (
-                <li key={index}>{ingredient.name}</li>
+                <li key={index}>
+                  {ingredient.name}
+                  <button type="button" onClick={() => setIngredients(ingredients.filter((_, i) => i !== index))}>X</button>
+                </li>
               ))}
             </ul>
           </label>
