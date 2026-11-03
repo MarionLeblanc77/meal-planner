@@ -1,0 +1,10 @@
+.main-content {
+  text-align: center;
+  padding: 5rem;
+}
+
+.form {
+  border: solid 1px black; 
+  padding: 5px; 
+  margin: 10px
+}

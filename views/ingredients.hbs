@@ -1,0 +1,28 @@
+<ul>
+  <table>
+      <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">On Season ?</th>
+          </tr>
+      </thead>
+      <tbody>
+        {{#each ingredientsList}}
+          <tr>          
+            <td>
+              <a href="/ingredients/{{this.id}}">
+                {{this.name}}
+              </a>
+            </td>
+            <td {{#if this.onSeason}}style="background-color: lightgreen;" {{else}}style="background-color: lightcoral;" {{/if}}>
+              {{#if this.onSeason}}
+                Yes
+              {{else}}
+                No
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>        
+  </table>
+</ul>

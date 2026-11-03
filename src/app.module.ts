@@ -1,10 +1,31 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { RecipesModule } from './recipes/recipes.module.js';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
+import { IngredientsModule } from './ingredients/ingredients.module.js';
 
 @Module({
-  imports: [],
+  imports: [
+    RecipesModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
+      autoLoadEntities: true,
+      synchronize: process.env.ENVIRONMENT === 'dev',
+    }),
+    IngredientsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
+
 export class AppModule {}
