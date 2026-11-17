@@ -24,9 +24,7 @@ function Recipe() {
               <p> Status: {recipeStatusLabels[recipe.status]}</p>
               <ul>
                 {recipe.ingredients.map((ingredient) => (
-                  <>
-                    <li key={ingredient.id}>{ingredient.name}</li>
-                  </>
+                  <li key={ingredient.id}>{ingredient.name}</li>
                 ))}
               </ul>
           </div>

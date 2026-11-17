@@ -1,10 +1,10 @@
 
+import { ILike, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Recipe } from './entities/recipe.entity.js';
 import { CreateRecipeDto } from './dto/create-recipe.dto.js';
-import { UpdateRecipeDto } from './dto/update-recipe.dto.js';
+import { PartialRecipeDto } from './dto/update-recipe.dto.js';
 
 @Injectable()
 export class RecipesService {
@@ -20,6 +20,10 @@ export class RecipesService {
   async findAll(): Promise<Recipe[]> {
     return await this.recipeRepository.find();
   }
+  
+  async search(searchRecipeDto: PartialRecipeDto): Promise<Recipe[]> {
+    return await this.recipeRepository.findBy({ name: ILike(`%${searchRecipeDto.name}%`) });
+  }
 
   async findOne(id: number): Promise<Recipe | null> {
     return await this.recipeRepository.findOne({
@@ -28,7 +32,7 @@ export class RecipesService {
     });
   }
 
-  async update(id: number, updateRecipeDto: UpdateRecipeDto): Promise<void> {
+  async update(id: number, updateRecipeDto: PartialRecipeDto): Promise<void> {
     await this.recipeRepository.save({ id, ...updateRecipeDto });
   }
 

@@ -9,15 +9,12 @@ interface SearchComponentProps<Searchable> {
   error: Error | null;
   searchResult: Searchable[];
   emptySearchMsg: string;
-  onClickLabel?: ({searchItemID, searchItem}: {searchItemID: number | undefined, searchItem: string}) => void | undefined;
+  onClickLabel?: ({searchItemID, searchItem}: {searchItemID: number | undefined, searchItem: string}) => void | undefined | Promise<void>;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
 function Search<T extends Searchable>({ searchItem, setSearchItem, isLoading, isError, error, searchResult = [], emptySearchMsg = 'No items found', onClickLabel = undefined, inputProps = {} }: SearchComponentProps<T>) {
   const [isActive, setIsActive] = useState<boolean>(false)
-  
-  
-  if (isError) return <div className="error">Error : {error?.message}</div>
 
   return (
     <div> 

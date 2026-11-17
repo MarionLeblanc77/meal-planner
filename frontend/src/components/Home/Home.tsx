@@ -1,14 +1,17 @@
 import IngredientForm from '../Ingredients/IngredientForm/IngredientForm'
 import RecipeForm from '../Recipes/RecipeForm/RecipeForm'
-import Search from '../Search/Search'
-import { useRecipes } from '../../hooks/useRecipes'
+import RecipeSearch from '../Recipes/RecipeSearch/RecipeSearch'
 
 function Home() {
   return (
     <div>
+      <h1>Meal Planner</h1>
+      <h2>Search a Recipe</h2>
+      <RecipeSearch/>
+      <h2>Add a Recipe</h2>
       <RecipeForm/>
+      <h2>Add a Ingredient</h2>
       <IngredientForm/>
-      <Search fetchHook={useRecipes()} emptySearchMsg="No recipes found"/>
     </div>
   )
 }

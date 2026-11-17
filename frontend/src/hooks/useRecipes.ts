@@ -30,6 +30,20 @@ export function useRecipe(id: number | undefined) {
   })
 }
 
+async function searchRecipes(searchInput: RecipeInput): Promise<Recipe[]> {
+  const result = await axiosInstance.post("http://[::1]:3000/recipes/search", searchInput);
+  return result.data;
+}
+
+export function useSearchRecipes(searchInput: RecipeInput | undefined) {
+  return useQuery({
+    queryKey: ['search', {name: searchInput?.name}],
+    queryFn: searchInput === undefined || searchInput.name === '' ? skipToken : () => searchRecipes(searchInput),
+    staleTime: 1000 * 60 * 2,
+    select: (data) => data
+  })
+}
+
 async function createOrEditRecipe(id: number | undefined, recipeData: RecipeInput): Promise<Recipe> {
   const result = await axiosInstance.post(`http://[::1]:3000/recipes/${id ? id + '/edit' : ''}`, recipeData);
   return result.data;

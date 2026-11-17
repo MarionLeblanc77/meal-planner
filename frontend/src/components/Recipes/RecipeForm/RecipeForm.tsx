@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Search from "../../Search/Search";
 import { useSearchIngredients } from "../../../hooks/useIngredients";
 import { useCreateOrEditRecipe, useRecipe } from "../../../hooks/useRecipes";
 import type { Recipe } from "../../../types/recipe";
 import type { IngredientInput } from "../../../types/ingredient";
+import Search from "../../Search/Search";
 
 function RecipeForm() {
   const navigate = useNavigate();
@@ -70,7 +70,16 @@ function RecipeForm() {
         </div>
         <div>
           <label>Ingredients:
-            <Search searchItem={searchItem} setSearchItem={setSearchItem} isLoading={isLoadingSearch} isError={isErrorSearch} error={errorSearch} searchResult={items} emptySearchMsg="No ingredients found" onClickLabel={({searchItemID, searchItem}) => addIngredient({searchItemID, searchItem})} inputProps={{ name: "ingredient", id: "ingredient" }} />
+            <Search 
+              searchItem={searchItem} 
+              setSearchItem={setSearchItem} 
+              isLoading={isLoadingSearch} 
+              isError={isErrorSearch} 
+              error={errorSearch} 
+              searchResult={items} 
+              emptySearchMsg="No ingredients found" 
+              onClickLabel={({searchItemID, searchItem}) => addIngredient({searchItemID, searchItem})} 
+              inputProps={{ name: "ingredient", id: "ingredient" }} />
             <ul>
               {ingredients.map((ingredient, index) => (
                 <li key={index}>

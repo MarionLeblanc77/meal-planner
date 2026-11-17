@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Put, Delete, Body, HttpCode, Param, Query, Render, Redirect, NotFoundException } from '@nestjs/common';
-import { CreateRecipeDto, RecipeStatus } from './dto/create-recipe.dto.js';
-import { UpdateRecipeDto } from './dto/update-recipe.dto.js';
-import { RecipesService } from './recipes.service.js';
+import { Controller, Get, Post, Delete, Body, Param, NotFoundException } from '@nestjs/common';
+import { CreateRecipeDto } from './dto/create-recipe.dto.js';
+import { PartialRecipeDto } from './dto/update-recipe.dto.js';
 import { Recipe } from './entities/recipe.entity.js';
+import { RecipesService } from './recipes.service.js';
 
 //TODO: add exception handling and validation for the controller methods
 @Controller('recipes')
@@ -19,6 +19,11 @@ export class RecipesController {
   @Get()
   async findAll() : Promise<Recipe[]> {
     return await this.recipesService.findAll();
+  }
+  
+  @Post('search')
+  async search(@Body() searchRecipeDto: PartialRecipeDto) : Promise<Recipe[]>  {
+    return this.recipesService.search(searchRecipeDto);
   }
   
   @Get(':id')
@@ -44,7 +49,7 @@ export class RecipesController {
 
   // TODO : see if it is interesting to use @Put instead of @Post if frontend updates to smt that can differentiate
   @Post(':id/edit')
-  async update(@Param('id') id: number, @Body() updateRecipeDto: UpdateRecipeDto) : Promise<void> {
+  async update(@Param('id') id: number, @Body() updateRecipeDto: PartialRecipeDto) : Promise<void> {
     await this.recipesService.update(id, updateRecipeDto);
     return;
   }
