@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { Ingredient } from './entities/ingredient.entity.js';
 import { CreateIngredientDto } from './dto/create-ingredient.dto.js';
-import { UpdateIngredientDto } from './dto/update-ingredient.dto.js';
+import { PartialIngredientDto } from './dto/update-ingredient.dto.js';
 
 @Injectable()
 export class IngredientsService {
@@ -20,11 +20,15 @@ export class IngredientsService {
     return await this.ingredientRepository.find();
   }
 
+  async search(searchIngredientDto: PartialIngredientDto): Promise<Ingredient[]> {
+    return await this.ingredientRepository.findBy({ name: ILike(`%${searchIngredientDto.name}%`) });
+  }
+
   async findOne(id: number): Promise<Ingredient | null> {
     return await this.ingredientRepository.findOneBy({ id });
   }
 
-  async update(id: number, updateIngredientDto: UpdateIngredientDto): Promise<void> {
+  async update(id: number, updateIngredientDto: PartialIngredientDto): Promise<void> {
     await this.ingredientRepository.update(id, updateIngredientDto);
   }
 

@@ -1,32 +1,32 @@
 import {useState } from 'react'
-import type { SearchProps, Searchable } from '../../types/search'
+import type { Searchable } from '../../types/search'
 
-interface SearchComponentProps<T extends Searchable> {
-  fetchHook: SearchProps<T>['fetchHook'];
+interface SearchComponentProps<Searchable> {
+  searchItem: string;
+  setSearchItem: React.Dispatch<React.SetStateAction<string>>;
+  isLoading: boolean;
+  isError: boolean;
+  error: Error | null;
+  searchResult: Searchable[];
   emptySearchMsg: string;
   onClickLabel?: ({searchItemID, searchItem}: {searchItemID: number | undefined, searchItem: string}) => void | undefined;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
-function Search<T extends Searchable>({ fetchHook, emptySearchMsg = 'No items found', onClickLabel = undefined, inputProps = {} }: SearchComponentProps<T>) {
+function Search<T extends Searchable>({ searchItem, setSearchItem, isLoading, isError, error, searchResult = [], emptySearchMsg = 'No items found', onClickLabel = undefined, inputProps = {} }: SearchComponentProps<T>) {
   const [isActive, setIsActive] = useState<boolean>(false)
-  const [searchItem, setSearchItem] = useState<string>('')
-  const { data, isLoading, isError, error } = fetchHook 
-  const items = data ?? []
-  const searchTerm = searchItem.trim().toLowerCase()
-  const filteredItems = items.filter(item =>
-    item.name.toLowerCase().includes(searchTerm)
-  )
-
-  if (isLoading) return <div className="spinner">Loading...</div>
-  if (isError) return <div className="error">Error : {error.message}</div>
+  
+  
+  if (isError) return <div className="error">Error : {error?.message}</div>
 
   return (
-    <div>      
+    <div> 
+      {isLoading && <div className="spinner">Loading...</div>}
+      {isError && <div className="error">Error : {error?.message}</div>}
       <input
         type="text"
         value={searchItem}
-        onChange={e => setSearchItem(e.target.value)}
+        onChange={e => setSearchItem(e.target.value)}        
         onFocus={() => setIsActive(true)}
         onBlur={() => setIsActive(false)}
         placeholder='Type to search'
@@ -44,11 +44,11 @@ function Search<T extends Searchable>({ fetchHook, emptySearchMsg = 'No items fo
           +
         </button>
       )}
-      {isActive && filteredItems.length === 0
+      {isActive && searchResult.length === 0
         ? <p>{emptySearchMsg}</p>
         : isActive && (
           <ul>
-            {filteredItems.map(item => 
+            {searchResult.map(item =>
               <li key={item.id}>
                 <button 
                   type="button"   

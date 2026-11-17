@@ -10,7 +10,7 @@ Common decision 26/09/17 :
 
 ## Database structure
 
-- How to handle user data : 1 database per user or a join table
+- How to handle user data : 1 database per user or a join table ?
 
 ## Design / Features
 

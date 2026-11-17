@@ -30,6 +30,20 @@ export function useIngredient(id: number | undefined) {
   })
 }
 
+async function searchIngredients(searchInput: IngredientInput): Promise<Ingredient[]> {
+  const result = await axiosInstance.post("http://[::1]:3000/ingredients/search", searchInput);
+  return result.data;
+}
+
+export function useSearchIngredients(searchInput: IngredientInput | undefined) {
+  return useQuery({
+    queryKey: ['search', {name: searchInput?.name}],
+    queryFn: searchInput === undefined || searchInput.name === '' ? skipToken : () => searchIngredients(searchInput),
+    staleTime: 1000 * 60 * 2,
+    select: (data) => data
+  })
+}
+
 async function createOrEditIngredient(id: number | undefined, ingredientData: IngredientInput): Promise<Ingredient> {
   const result = await axiosInstance.post(`http://[::1]:3000/ingredients/${id ? id + '/edit' : ''}`, ingredientData);
   return result.data;

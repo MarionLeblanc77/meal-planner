@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Search from "../../Search/Search";
-import { useIngredients } from "../../../hooks/useIngredients";
+import { useSearchIngredients } from "../../../hooks/useIngredients";
 import { useCreateOrEditRecipe, useRecipe } from "../../../hooks/useRecipes";
 import type { Recipe } from "../../../types/recipe";
 import type { IngredientInput } from "../../../types/ingredient";
@@ -10,9 +10,12 @@ function RecipeForm() {
   const navigate = useNavigate();
   const { recipeId } = useParams();
   const { data: recipe, isLoading, isError, error, isFetching } = useRecipe(recipeId ? parseInt(recipeId) : undefined);
-  const ingredientsQuery = useIngredients()
   const createOrEditRecipe = useCreateOrEditRecipe(recipeId ? parseInt(recipeId) : undefined);
   const [ingredients, setIngredients] = useState<Recipe['ingredients']>(recipe?.ingredients ?? []);
+
+  const [searchItem, setSearchItem] = useState<string>('')
+  const { data, isLoading: isLoadingSearch, isError: isErrorSearch, error: errorSearch } = useSearchIngredients({ name: searchItem.trim().toLowerCase() })
+  const items = data ?? []
 
   if (isLoading) return <div className="spinner">Loading...</div>
   if (isError) return <div className="error">Error : {error.message}</div>
@@ -36,9 +39,6 @@ function RecipeForm() {
       setIngredients([...ingredients, newIngredient]);      
     }
   }
-
-  {/* TODO!:  Behavior if ingredient is not in the list + change put if ingredient is already in the database ? */}
-
 
   return (
     <>
@@ -70,7 +70,7 @@ function RecipeForm() {
         </div>
         <div>
           <label>Ingredients:
-            <Search fetchHook={ingredientsQuery} emptySearchMsg="No ingredients found" onClickLabel={({searchItemID, searchItem}) => addIngredient({searchItemID, searchItem})} inputProps={{ name: "ingredient", id: "ingredient" }} />
+            <Search searchItem={searchItem} setSearchItem={setSearchItem} isLoading={isLoadingSearch} isError={isErrorSearch} error={errorSearch} searchResult={items} emptySearchMsg="No ingredients found" onClickLabel={({searchItemID, searchItem}) => addIngredient({searchItemID, searchItem})} inputProps={{ name: "ingredient", id: "ingredient" }} />
             <ul>
               {ingredients.map((ingredient, index) => (
                 <li key={index}>

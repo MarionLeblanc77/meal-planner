@@ -14,6 +14,13 @@ npm install
 ## Compile and run the project
 
 ```bash
+#docker, back in watch mode and front
+npm run launch:dev
+```
+
+OR
+
+```bash
 # docker
 docker compose up -d
 
@@ -23,6 +30,10 @@ npm run start
 npm run start:dev
 # production mode
 npm run start:prod
+
+# front end
+cd .\frontend\
+npm run dev
 ```
 
 ## DataBase

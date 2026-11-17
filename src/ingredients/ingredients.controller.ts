@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Render, Redirect, NotFoundException } from '@nestjs/common';
 import { IngredientsService } from './ingredients.service.js';
 import { CreateIngredientDto } from './dto/create-ingredient.dto.js';
-import { UpdateIngredientDto } from './dto/update-ingredient.dto.js';
+import { PartialIngredientDto } from './dto/update-ingredient.dto.js';
 import { Ingredient } from './entities/ingredient.entity.js';
 
 //TODO: add exception handling and validation for the controller methods
@@ -10,15 +10,18 @@ export class IngredientsController {
   constructor(private readonly ingredientsService: IngredientsService) {}
 
   @Post()
-  // @Redirect('/ingredients', 301)
   async create(@Body() createIngredientDto: CreateIngredientDto) : Promise< Ingredient> {
     return await this.ingredientsService.create(createIngredientDto);
   }
 
   @Get()
-  // @Render('ingredients')
   async findAll() : Promise<Ingredient[]>  {
     return await this.ingredientsService.findAll();
+  }
+
+  @Post('search')
+  async search(@Body() searchIngredientDto: PartialIngredientDto) : Promise<Ingredient[]>  {
+    return this.ingredientsService.search(searchIngredientDto);
   }
   
   @Get(':id')
@@ -34,7 +37,7 @@ export class IngredientsController {
   // TODO : see if it is interesting to use @Put instead of @Post if frontend updates to smt that can differentiate
   @Post(':id/edit')
   // @Redirect()
-  async update(@Param('id') id: number, @Body() updateIngredientDto: UpdateIngredientDto) : Promise<{ statusCode: number; url: string; }> {
+  async update(@Param('id') id: number, @Body() updateIngredientDto: PartialIngredientDto) : Promise<{ statusCode: number; url: string; }> {
     this.ingredientsService.update(id, updateIngredientDto);
     return { statusCode: 301, url: '/ingredients/' + id };
   }
