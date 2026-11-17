@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Render, Redirect, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, NotFoundException } from '@nestjs/common';
 import { IngredientsService } from './ingredients.service.js';
 import { CreateIngredientDto } from './dto/create-ingredient.dto.js';
-import { PartialIngredientDto } from './dto/update-ingredient.dto.js';
+import { PartialIngredientDto } from './dto/partial-ingredient.dto.js';
 import { Ingredient } from './entities/ingredient.entity.js';
 
 //TODO: add exception handling and validation for the controller methods

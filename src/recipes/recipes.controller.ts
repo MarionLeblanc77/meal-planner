@@ -1,8 +1,9 @@
 import { Controller, Get, Post, Delete, Body, Param, NotFoundException } from '@nestjs/common';
 import { CreateRecipeDto } from './dto/create-recipe.dto.js';
-import { PartialRecipeDto } from './dto/update-recipe.dto.js';
+import { PartialRecipeDto } from './dto/partial-recipe.dto.js';
 import { Recipe } from './entities/recipe.entity.js';
 import { RecipesService } from './recipes.service.js';
+import { SearchRecipeDto } from './dto/search-recipe.dto.js';
 
 //TODO: add exception handling and validation for the controller methods
 @Controller('recipes')
@@ -22,7 +23,7 @@ export class RecipesController {
   }
   
   @Post('search')
-  async search(@Body() searchRecipeDto: PartialRecipeDto) : Promise<Recipe[]>  {
+  async search(@Body() searchRecipeDto: SearchRecipeDto) : Promise<Recipe[]>  {
     return this.recipesService.search(searchRecipeDto);
   }
   

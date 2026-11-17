@@ -1,0 +1,24 @@
+#recipe_search {
+   display: flex;
+   flex-direction: row;
+   align-items: flex-start;
+}
+
+#recipe_search_results{
+   padding: 1rem;
+   width: 100%;
+}
+
+#recipe_search_results input{
+   width: 100%;
+}
+
+#recipe_search_criteria {
+   padding: 1rem;
+   text-align: left;
+   background-color: #f5f5f5;
+}
+
+.recipe_search_criteria_item {
+   margin-bottom: 1rem;
+}

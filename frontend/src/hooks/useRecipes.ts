@@ -36,9 +36,12 @@ async function searchRecipes(searchInput: RecipeInput): Promise<Recipe[]> {
 }
 
 export function useSearchRecipes(searchInput: RecipeInput | undefined) {
+  const hasCriteria = 
+    !!searchInput &&  
+    (!!searchInput.name || (searchInput.ingredientIds?.length ?? 0) > 0);
   return useQuery({
-    queryKey: ['search', {name: searchInput?.name}],
-    queryFn: searchInput === undefined || searchInput.name === '' ? skipToken : () => searchRecipes(searchInput),
+    queryKey: ['search', 'recipes', searchInput],
+    queryFn: !hasCriteria? skipToken : () => searchRecipes(searchInput),
     staleTime: 1000 * 60 * 2,
     select: (data) => data
   })

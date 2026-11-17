@@ -1,5 +1,10 @@
 # WIKI-TODO
 
+## Fixes
+
+- In the recipe creation/update form, when done with adding ingredients, the first click on the update recipe button does not work (there is some kind of unfocus thing happening first and small jump because of disappearance of the "No Ingredient found")
+- In the recipe creation/update form, when done adding ingredients, pressing enter send the global recipe form (would be nice to be the Ingredient addition)
+
 ## Translation
 
 Common decision 26/09/17 :
@@ -14,4 +19,5 @@ Common decision 26/09/17 :
 
 ## Design / Features
 
+- Think about exclusion on the filter (at least ingredient)
 - Last added, last seen and top used the past rolling 6 months on the meal planning page

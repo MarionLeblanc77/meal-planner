@@ -12,7 +12,7 @@ export function useIngredients() {
     queryKey: ['ingredients'],
     queryFn: fetchIngredients,
     staleTime: 1000 * 60 * 2,
-    select: (data) => data.slice(0, 20)
+    select: (data) => data
   })
 }
 
@@ -37,7 +37,7 @@ async function searchIngredients(searchInput: IngredientInput): Promise<Ingredie
 
 export function useSearchIngredients(searchInput: IngredientInput | undefined) {
   return useQuery({
-    queryKey: ['search', {name: searchInput?.name}],
+    queryKey: ['search', 'ingredients', searchInput],
     queryFn: searchInput === undefined || searchInput.name === '' ? skipToken : () => searchIngredients(searchInput),
     staleTime: 1000 * 60 * 2,
     select: (data) => data

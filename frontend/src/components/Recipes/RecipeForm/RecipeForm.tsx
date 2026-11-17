@@ -79,7 +79,9 @@ function RecipeForm() {
               searchResult={items} 
               emptySearchMsg="No ingredients found" 
               onClickLabel={({searchItemID, searchItem}) => addIngredient({searchItemID, searchItem})} 
-              inputProps={{ name: "ingredient", id: "ingredient" }} />
+              inputProps={{ name: "ingredient", id: "ingredient" }}
+              addOption={true}
+             />
             <ul>
               {ingredients.map((ingredient, index) => (
                 <li key={index}>

@@ -15,4 +15,5 @@ export type RecipeInput = {
   basePortions?: Recipe['basePortions']
   status?: Recipe['status']
   ingredients?: Recipe['ingredients']
+  ingredientIds?: number[]
 }

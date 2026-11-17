@@ -11,9 +11,12 @@ interface SearchComponentProps<Searchable> {
   emptySearchMsg: string;
   onClickLabel?: ({searchItemID, searchItem}: {searchItemID: number | undefined, searchItem: string}) => void | undefined | Promise<void>;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
+  addOption?: boolean;
+  isAlwaysVisible?: boolean;
 }
 
-function Search<T extends Searchable>({ searchItem, setSearchItem, isLoading, isError, error, searchResult = [], emptySearchMsg = 'No items found', onClickLabel = undefined, inputProps = {} }: SearchComponentProps<T>) {
+function Search<T extends Searchable>({ 
+  searchItem, setSearchItem, isLoading, isError, error, searchResult = [], emptySearchMsg = 'No items found', onClickLabel = undefined, inputProps = {}, addOption = false, isAlwaysVisible = false }: SearchComponentProps<T>) {
   const [isActive, setIsActive] = useState<boolean>(false)
 
   return (
@@ -29,7 +32,7 @@ function Search<T extends Searchable>({ searchItem, setSearchItem, isLoading, is
         placeholder='Type to search'
         {...inputProps}
       />
-      {isActive && searchItem.trim() !== '' && (
+      {addOption && isActive && searchItem.trim() !== '' && (
         <button 
           type="button"   
           onMouseDown={event => event.preventDefault()}
@@ -41,9 +44,9 @@ function Search<T extends Searchable>({ searchItem, setSearchItem, isLoading, is
           +
         </button>
       )}
-      {isActive && searchResult.length === 0
+      {(isAlwaysVisible || isActive) && searchResult.length === 0
         ? <p>{emptySearchMsg}</p>
-        : isActive && (
+        : (isAlwaysVisible || isActive) && (
           <ul>
             {searchResult.map(item =>
               <li key={item.id}>
@@ -55,7 +58,7 @@ function Search<T extends Searchable>({ searchItem, setSearchItem, isLoading, is
                     setSearchItem('')
                   }}
                 >
-                  + {item.name}
+                  {item.name}
                 </button>
               </li>
             )}

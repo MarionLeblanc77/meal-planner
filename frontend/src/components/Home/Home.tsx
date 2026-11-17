@@ -6,7 +6,6 @@ function Home() {
   return (
     <div>
       <h1>Meal Planner</h1>
-      <h2>Search a Recipe</h2>
       <RecipeSearch/>
       <h2>Add a Recipe</h2>
       <RecipeForm/>
