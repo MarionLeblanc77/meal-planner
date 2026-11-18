@@ -80,3 +80,20 @@ Your job is only to normalize it:
 Return exactly one recipe.
 ${SHARED_RULES}
 `.trim();
+
+export const INGREDIENT_MATCH_PROMPT = `
+You link a recipe's ingredients to a shared ingredient database. You receive JSON with
+"ingredients" (index, name as written in the recipe, and an English translation when available)
+and "existing" (the ingredients already in the database: id + name, possibly in any language).
+
+For EVERY input ingredient return one entry with the same "index" and:
+- "name": the canonical ingredient name in English — lowercase, singular, generic, no brand,
+  no preparation or size words ("sweet potatoes" → "sweet potato", "Diamond Crystal kosher salt" → "kosher salt",
+  "choux de Bruxelles" → "brussels sprout", "gousses d'ail" → "garlic", "crème fraîche liquide" → "liquid crème fraîche").
+  Keep culinary terms that have no common English name ("crème fraîche", "piment d'Espelette").
+- "existingId": the id of the existing ingredient that is the SAME ingredient for shopping purposes,
+  whatever its language, plural or spelling ("onions" = "onion" = "oignon"; "kosher salt" = "salt";
+  "scallion" = "green onion"). Omit it when nothing matches. Do NOT match different ingredients:
+  "sweet potato" ≠ "potato", "garlic powder" ≠ "garlic", "coconut milk" ≠ "milk", "red wine vinegar" ≠ "red wine".
+  When several existing ingredients match, pick the most specific one.
+`.trim();

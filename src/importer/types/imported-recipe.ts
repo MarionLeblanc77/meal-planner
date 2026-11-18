@@ -98,3 +98,27 @@ export interface ImportedRecipe extends ExtractedRecipe {
   /** Present when the source language differs from the target language. */
   translation?: RecipeTranslation;
 }
+
+/** Output of the ingredient-match step, one entry per recipe ingredient (by index). */
+export const IngredientMatchSchema = z.object({
+  ingredients: z.array(
+    z.object({
+      index: z.number().int().nonnegative(),
+      name: z
+        .string()
+        .min(1)
+        .describe('Canonical English name: lowercase, singular, generic, e.g. "sweet potato"'),
+      existingId: z
+        .number()
+        .int()
+        .optional()
+        .describe('id of the matching existing ingredient; omit when none matches'),
+    }),
+  ),
+});
+
+/** Canonical English name per recipe ingredient (index-aligned), plus its DB match if any. */
+export interface IngredientMatch {
+  name: string;
+  existingId?: number;
+}

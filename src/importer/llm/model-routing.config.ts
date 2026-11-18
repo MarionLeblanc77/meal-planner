@@ -11,7 +11,8 @@ export type ImporterTask =
   | 'website-fallback' // no JSON-LD: extract from page text
   | 'image'
   | 'pdf'
-  | 'translate'; // recipe text → target language (default English)
+  | 'translate' // recipe text → target language (default English)
+  | 'ingredient-match'; // canonical English ingredient names + match to existing DB ingredients
 
 export interface ModelRoute {
   model: string;
@@ -27,6 +28,7 @@ const DEFAULT_ROUTES: Record<ImporterTask, ModelRoute> = {
   image: { model: 'anthropic/claude-sonnet-5.5', maxFileBytes: 5 * MB },
   pdf: { model: 'anthropic/claude-sonnet-5.5', maxFileBytes: 32 * MB },
   translate: { model: 'anthropic/claude-haiku-5.5', maxFileBytes: 5 * MB },
+  'ingredient-match': { model: 'anthropic/claude-haiku-5.5', maxFileBytes: 5 * MB },
 };
 
 const ENV_SUFFIX: Record<ImporterTask, string> = {
@@ -35,6 +37,7 @@ const ENV_SUFFIX: Record<ImporterTask, string> = {
   image: 'IMAGE',
   pdf: 'PDF',
   translate: 'TRANSLATE',
+  'ingredient-match': 'INGREDIENT_MATCH',
 };
 
 export function resolveRoute(

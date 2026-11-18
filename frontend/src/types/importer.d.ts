@@ -5,7 +5,10 @@ export type ImportSourceType = "website" | "image" | "pdf"
 export interface DraftIngredient {
   /** Set when the name matched an existing ingredient. */
   id?: number
+  /** English name, or the matched existing ingredient's name. */
   name: string
+  /** As written in the source, when it differs from name. */
+  originalName?: string
   quantity?: string
   note?: string
   group?: string

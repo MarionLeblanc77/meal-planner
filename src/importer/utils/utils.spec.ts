@@ -4,7 +4,7 @@ import { dropNulls, sanitizeRecipe } from '../llm/llm.service.js';
 import { resolveRoute } from '../llm/model-routing.config.js';
 import type { ImportedRecipe } from '../types/imported-recipe.js';
 import { detectSource, sniffMimeType } from './detect-source.js';
-import { flattenInstructions, normalizeName, toRecipeDraft } from './recipe-draft.js';
+import { flattenInstructions, matchKey, normalizeName, toRecipeDraft } from './recipe-draft.js';
 import { cleanUrl, isLoginWalled } from './url.js';
 
 describe('url', () => {
@@ -172,6 +172,59 @@ describe('recipe draft', () => {
     expect(draft.ingredients).toEqual([
       { id: 7, name: 'creme fraiche liquide', quantity: '320 ml', isNew: false },
       { name: 'Œufs', quantity: '2', isNew: true },
+    ]);
+  });
+
+  it('builds a match key that ignores accents and plurals', () => {
+    expect(matchKey('Sweet Potatoes')).toBe('sweet potato');
+    expect(matchKey('Cherries')).toBe('cherry');
+    expect(matchKey('Tomatoes')).toBe('tomato');
+    expect(matchKey('Oignons')).toBe('oignon');
+    expect(matchKey('Swiss cheese')).toBe('swiss cheese');
+  });
+
+  it('uses English names and quantities from the translation when no match step ran', () => {
+    const draft = toRecipeDraft(
+      {
+        ...recipe,
+        ingredients: [{ name: 'Œufs', quantity: '2' }, { name: 'Oignons', quantity: '1 c.à.s', note: 'émincés' }],
+        translation: {
+          language: 'en',
+          machineTranslated: true,
+          name: 'Clafoutis',
+          ingredients: [{ name: 'Eggs', quantity: '2' }, { name: 'Onions', quantity: '1 tbsp', note: 'sliced' }],
+          steps: recipe.steps.map((s) => ({ text: s.text })),
+          tips: recipe.tips,
+        },
+      },
+      [{ id: 3, name: 'onion' }],
+    );
+    expect(draft.ingredients).toEqual([
+      { name: 'Eggs', originalName: 'Œufs', quantity: '2', isNew: true },
+      { id: 3, name: 'onion', originalName: 'Oignons', quantity: '1 tbsp', note: 'sliced', isNew: false },
+    ]);
+  });
+
+  it('applies the match step: canonical names, existing ids, de-dupe by id', () => {
+    const draft = toRecipeDraft(
+      {
+        ...recipe,
+        ingredients: [
+          { name: 'Sweet potatoes', quantity: '1 1/2 pounds' },
+          { name: 'Diamond Crystal kosher salt' },
+          { name: 'sea salt', group: 'Topping' },
+        ],
+      },
+      [{ id: 9, name: 'salt' }],
+      [
+        { name: 'sweet potato' },
+        { name: 'kosher salt', existingId: 9 },
+        { name: 'sea salt', existingId: 9 },
+      ],
+    );
+    expect(draft.ingredients).toEqual([
+      { name: 'sweet potato', originalName: 'Sweet potatoes', quantity: '1 1/2 pounds', isNew: true },
+      { id: 9, name: 'salt', originalName: 'Diamond Crystal kosher salt', isNew: false },
     ]);
   });
 });

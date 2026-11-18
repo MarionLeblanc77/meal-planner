@@ -1,10 +1,13 @@
 import { RecipeStatus } from '../../recipes/dto/create-recipe.dto.js';
-import type { ImportedRecipe } from '../types/imported-recipe.js';
+import type { ImportedRecipe, IngredientMatch } from '../types/imported-recipe.js';
 
 export interface DraftIngredient {
   /** Set when the name matched an existing ingredient — avoids creating duplicates. */
   id?: number;
+  /** English name (or the matched DB ingredient's name) — this is what gets saved. */
   name: string;
+  /** The name as written in the source, when it differs from `name`. */
+  originalName?: string;
   quantity?: string;
   note?: string;
   group?: string;
@@ -97,28 +100,61 @@ export function normalizeName(name: string): string {
     .trim();
 }
 
+/** normalizeName + naive singular per word: "Sweet Potatoes" ≈ "sweet potato". */
+export function matchKey(name: string): string {
+  return normalizeName(name)
+    .split(' ')
+    .map((w) => {
+      if (w.length <= 3 || w.endsWith('ss')) return w;
+      if (w.endsWith('ies') && w.length > 4) return `${w.slice(0, -3)}y`;
+      if (w.endsWith('oes')) return w.slice(0, -2);
+      if (w.endsWith('s')) return w.slice(0, -1);
+      return w;
+    })
+    .join(' ');
+}
+
+/**
+ * @param matches canonical English name + DB match per ingredient (index-aligned), from
+ *   IngredientMatchService. Without it, falls back to the translated name and matchKey.
+ */
 export function toRecipeDraft(
   recipe: ImportedRecipe,
   existing: { id: number; name: string }[],
+  matches?: IngredientMatch[],
 ): RecipeDraft {
-  const byName = new Map(existing.map((i) => [normalizeName(i.name), i]));
+  const byId = new Map(existing.map((i) => [i.id, i]));
+  const byKey = new Map(existing.map((i) => [matchKey(i.name), i]));
   const seen = new Set<string>();
   const ingredients: DraftIngredient[] = [];
 
-  for (const ing of recipe.ingredients) {
-    const key = normalizeName(ing.name);
+  recipe.ingredients.forEach((ing, i) => {
+    // Quantity / note in English too when the recipe was translated.
+    const en = recipe.translation?.ingredients[i];
+    const m = matches?.[i];
+    const name = (m?.name ?? en?.name ?? ing.name).trim();
+    const match =
+      (m?.existingId !== undefined ? byId.get(m.existingId) : undefined) ??
+      byKey.get(matchKey(name)) ??
+      byKey.get(matchKey(ing.name));
+
     // A recipe links each ingredient once (e.g. garlic in both the dish and its sauce);
     // the per-use quantities are kept in the instructions text.
-    if (!key || seen.has(key)) continue;
+    const key = match ? `#${match.id}` : matchKey(name);
+    if (!key || seen.has(key)) return;
     seen.add(key);
-    const match = byName.get(key);
-    const detail = { quantity: ing.quantity, note: ing.note, group: ing.group };
-    ingredients.push(
-      match
-        ? { id: match.id, name: match.name, ...detail, isNew: false }
-        : { name: ing.name, ...detail, isNew: true },
-    );
-  }
+
+    const savedName = match?.name ?? name;
+    ingredients.push({
+      ...(match && { id: match.id }),
+      name: savedName,
+      ...(normalizeName(ing.name) !== normalizeName(savedName) && { originalName: ing.name }),
+      quantity: en?.quantity ?? ing.quantity,
+      note: en?.note ?? ing.note,
+      group: en?.group ?? ing.group,
+      isNew: !match,
+    });
+  });
 
   const t = recipe.translation;
   return {

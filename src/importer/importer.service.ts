@@ -11,6 +11,7 @@ import { PdfHandler } from './handlers/pdf.handler.js';
 import { WebsiteHandler } from './handlers/website.handler.js';
 import type { ImportInput, SourceHandler } from './handlers/source-handler.js';
 import type { ImportedRecipe, SourceType } from './types/imported-recipe.js';
+import { IngredientMatchService } from './ingredient-match.service.js';
 import { TranslationService } from './translation.service.js';
 import { detectSource } from './utils/detect-source.js';
 import { toRecipeDraft, type RecipeDraft } from './utils/recipe-draft.js';
@@ -33,6 +34,7 @@ export class ImporterService {
     pdf: PdfHandler,
     private readonly ingredients: IngredientsService,
     private readonly translation: TranslationService,
+    private readonly ingredientMatch: IngredientMatchService,
   ) {
     this.handlers = { website, image, pdf };
   }
@@ -101,13 +103,16 @@ export class ImporterService {
       throw new UnprocessableEntityException('No recipe was found in this source.');
     }
     const existing = await this.ingredients.findAll();
+    const matched = await Promise.all(
+      recipes.map((recipe) => this.ingredientMatch.match(recipe, existing)),
+    );
     return {
       source,
-      recipes: recipes.map((imported) => ({
+      recipes: recipes.map((imported, i) => ({
         imported,
-        draft: toRecipeDraft(imported, existing),
+        draft: toRecipeDraft(imported, existing, matched[i].matches),
       })),
-      usage,
+      usage: [...usage, ...matched.flatMap((m) => (m.usage ? [m.usage] : []))],
     };
   }
 }

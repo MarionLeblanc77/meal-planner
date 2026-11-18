@@ -9,7 +9,7 @@ import Search from "../../Search/Search";
 import "../RecipeImport/RecipeImport.css";
 
 /** Display-only fields an imported ingredient carries; stripped before saving. */
-type FormIngredient = IngredientInput & Partial<Pick<DraftIngredient, "isNew" | "quantity" | "note" | "group">>;
+type FormIngredient = IngredientInput & Partial<Pick<DraftIngredient, "isNew" | "originalName" | "quantity" | "note" | "group">>;
 
 function RecipeForm() {
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ function RecipeForm() {
       status: formData.get('status') as Recipe['status'],
       // Imported ingredients carry display-only fields the API doesn't know about.
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ingredients: ingredients.map(({ isNew, quantity, note, group, ...ingredient }) => ingredient) as Recipe['ingredients']
+      ingredients: ingredients.map(({ isNew, originalName, quantity, note, group, ...ingredient }) => ingredient) as Recipe['ingredients']
     })
     navigate(importState?.returnTo ?? '/recipes');
   }
@@ -124,9 +124,9 @@ function RecipeForm() {
                 <li key={index}>
                   {ingredient.name}
                   {ingredient.isNew && <span className="ingredient-new" title="Will be created as a new ingredient">new</span>}
-                  {(ingredient.quantity || ingredient.group) && (
+                  {(ingredient.quantity || ingredient.originalName || ingredient.group) && (
                     <span className="ingredient-detail">
-                      {[ingredient.quantity, ingredient.group].filter(Boolean).join(" · ")}
+                      {[ingredient.quantity, ingredient.originalName && `"${ingredient.originalName}"`, ingredient.group].filter(Boolean).join(" · ")}
                     </span>
                   )}
                   <button type="button" onClick={() => setIngredients(ingredients.filter((_, i) => i !== index))}>X</button>
