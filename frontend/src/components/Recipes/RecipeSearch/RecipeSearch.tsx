@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
+import Switch from '@mui/material/Switch';
 import { useSearchRecipes } from "../../../hooks/useRecipes";
 import type { IngredientInput } from "../../../types/ingredient";
 import Search from "../../Search/Search"
@@ -9,6 +10,7 @@ import { useSearchIngredients } from "../../../hooks/useIngredients";
 function RecipeSearch() {
   const navigate = useNavigate();
 
+  const [checked, setChecked] = useState<boolean>(false);
   const [searchedIngredientsList, setSearchedIngredientsList] = useState<IngredientInput[]>([])
 
   const [searchRecipe, setSearchRecipe] = useState<string>('')
@@ -19,7 +21,8 @@ function RecipeSearch() {
     error: errorRecipeSearch 
   } = useSearchRecipes(
     { name: searchRecipe.trim().toLowerCase(), 
-      ingredientIds: searchedIngredientsList.map((ingredient) => ingredient?.id).filter((id): id is number => !!id)
+      ingredientIds: searchedIngredientsList.map((ingredient) => ingredient?.id).filter((id): id is number => !!id),
+      hasAllIngredients: checked
     }
   )
   const recipes = recipesData ?? []
@@ -27,7 +30,6 @@ function RecipeSearch() {
   const [searchIngredient, setSearchIngredient] = useState<string>('')
   const { data : ingredientsData, isLoading: isLoadingIngredientSearch, isError: isErrorIngredientSearch, error: errorIngredientSearch } = useSearchIngredients({ name: searchIngredient.trim().toLowerCase() })
   const ingredients = ingredientsData ?? []
-
 
   return (
     <>    
@@ -48,6 +50,14 @@ function RecipeSearch() {
               onClickLabel={({searchItemID, searchItem}) => {setSearchedIngredientsList([...searchedIngredientsList, {name: searchItem, id: searchItemID}])}} 
               inputProps={{ name: "ingredient", id: "ingredient" }}
              />
+          </div>
+          <div className="switch">
+            <p>Or</p>
+            <Switch 
+              checked={checked} 
+              onChange={(e) => setChecked(e.target.checked)} 
+            />
+            <p>And</p>
           </div>
           <ul id="recipe_search_criteria_ingredients_list">
             {searchedIngredientsList.map((ingredient) => (

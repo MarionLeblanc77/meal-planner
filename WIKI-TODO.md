@@ -19,5 +19,11 @@ Common decision 26/09/17 :
 
 ## Design / Features
 
+- Recipes categories
+- Seasonality in search
+- Portions of ingredients (how to handle units ? conversion info)
+- Instructions, temperature and mode, cooking time and total time, origin, comments
+- 
 - Think about exclusion on the filter (at least ingredient)
 - Last added, last seen and top used the past rolling 6 months on the meal planning page
+- Equipement options in search
