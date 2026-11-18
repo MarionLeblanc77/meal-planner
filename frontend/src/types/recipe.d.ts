@@ -16,4 +16,5 @@ export type RecipeInput = {
   status?: Recipe['status']
   ingredients?: Recipe['ingredients']
   ingredientIds?: number[]
+  hasAllIngredients?: boolean
 }
