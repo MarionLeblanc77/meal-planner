@@ -5,6 +5,7 @@ import { RecipesModule } from './recipes/recipes.module.js';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { IngredientsModule } from './ingredients/ingredients.module.js';
+import { ImporterModule } from './importer/importer.module.js';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { IngredientsModule } from './ingredients/ingredients.module.js';
       synchronize: process.env.ENVIRONMENT === 'dev',
     }),
     IngredientsModule,
+    ImporterModule,
   ],
   controllers: [AppController],
   providers: [AppService],
