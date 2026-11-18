@@ -7,6 +7,7 @@ import Ingredients from "./components/Ingredients/Ingredients";
 import Recipe from "./components/Recipes/Recipe/Recipe";
 import Ingredient from "./components/Ingredients/Ingredient/Ingredient";
 import RecipeForm from "./components/Recipes/RecipeForm/RecipeForm";
+import RecipeImport from "./components/Recipes/RecipeImport/RecipeImport";
 import IngredientForm from "./components/Ingredients/IngredientForm/IngredientForm";
 
 function App() {
@@ -19,6 +20,8 @@ function App() {
 
           <Route path="recipes">
             <Route index element={<Recipes />} />
+            <Route path="import" element={<RecipeImport />} />
+            <Route path="import/review" element={<RecipeForm />} />
             <Route path=":recipeId" element={<Recipe />} />
             <Route path=":recipeId/edit" element={<RecipeForm />} />
 

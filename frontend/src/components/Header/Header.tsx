@@ -21,6 +21,14 @@ export default function Header() {
         Recipes list
       </NavLink>
       <NavLink
+        to="/recipes/import"
+        className={({ isActive }) =>
+          isActive ? "active" : ""
+        }
+      >
+        Import a recipe
+      </NavLink>
+      <NavLink
         to="/ingredients"
         className={({ isActive }) =>
           isActive ? "active" : ""
