@@ -24,14 +24,47 @@ export class RecipesService {
   
   async search(searchRecipeDto: SearchRecipeDto): Promise<Recipe[]> {
     const where: FindOptionsWhere<Recipe> = {};
-    const name = searchRecipeDto.name;
 
+    const name = searchRecipeDto.name;
     if (name && name.trim() !== '') {
       where.name = ILike(`%${name}%`);
     }
 
-    if (searchRecipeDto.ingredientIds?.length) {
-      where.ingredients = { id: In(searchRecipeDto.ingredientIds) };
+    const ingredientIds = [...new Set(searchRecipeDto.ingredientIds ?? [])];
+    const hasAllIngredients = searchRecipeDto.hasAllIngredients;
+
+    if (ingredientIds.length > 0) {
+      if (!hasAllIngredients) {
+        where.ingredients = { id: In(ingredientIds) };
+      } else {
+        const query = this.recipeRepository
+          .createQueryBuilder('recipe')
+          .leftJoinAndSelect('recipe.ingredients', 'ingredient');
+
+        if (where.name) {
+          query.where({ name: where.name });
+        }
+
+        return query
+          .andWhere((qb) => {
+            const matchingRecipes = qb
+              .subQuery()
+              .select('matchedRecipe.id')
+              .from(Recipe, 'matchedRecipe')
+              .innerJoin('matchedRecipe.ingredients', 'matchedIngredient')
+              .where('matchedIngredient.id IN (:...ingredientIds)')
+              .groupBy('matchedRecipe.id')
+              .having('COUNT(DISTINCT matchedIngredient.id) = :ingredientCount')
+              .getQuery();
+
+            return `recipe.id IN ${matchingRecipes}`;
+          })
+          .setParameters({
+            ingredientIds,
+            ingredientCount: ingredientIds.length,
+          })
+          .getMany();
+      }
     }
 
     return await this.recipeRepository.findBy(where);
