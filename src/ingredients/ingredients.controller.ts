@@ -25,7 +25,6 @@ export class IngredientsController {
   }
   
   @Get(':id')
-  // @Render('ingredient')
   async findOne(@Param('id') id: number) : Promise<Ingredient> {
     const ingredient = await this.ingredientsService.findOne(id);
     if (!ingredient) {
@@ -36,7 +35,6 @@ export class IngredientsController {
 
   // TODO : see if it is interesting to use @Put instead of @Post if frontend updates to smt that can differentiate
   @Post(':id/edit')
-  // @Redirect()
   async update(@Param('id') id: number, @Body() updateIngredientDto: PartialIngredientDto) : Promise<{ statusCode: number; url: string; }> {
     this.ingredientsService.update(id, updateIngredientDto);
     return { statusCode: 301, url: '/ingredients/' + id };

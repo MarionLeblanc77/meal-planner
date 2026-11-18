@@ -7,6 +7,7 @@ export interface Recipe {
   basePortions?: number
   status: RecipeStatus
   ingredients: Ingredient[]
+  categories: Category[]
 }
 
 export type RecipeInput = {
@@ -17,4 +18,7 @@ export type RecipeInput = {
   ingredients?: Recipe['ingredients']
   ingredientIds?: number[]
   hasAllIngredients?: boolean
+  categories?: Recipe['categories']
+  categoryIds?: number[]
+  hasAllCategories?: boolean
 }

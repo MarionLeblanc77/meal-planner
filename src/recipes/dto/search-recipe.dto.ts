@@ -16,4 +16,14 @@ export class SearchRecipeDto  {
     @IsOptional()
     @IsBoolean()
     hasAllIngredients?: boolean = false;
+
+    @IsOptional()
+    @IsArray()
+    @IsInt({ each: true })
+    @Type(() => Number)
+    categoryIds?: number[];
+
+    @IsOptional()
+    @IsBoolean()
+    hasAllCategories?: boolean = false;
 }
