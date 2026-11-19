@@ -2,8 +2,6 @@
 
 ## Fixes
 
-- (4) deletion button on recipe doesn't work
-
 ## Translation
 
 Common decision 26/09/17 :
@@ -18,7 +16,9 @@ Common decision 26/09/17 :
 
 ## Design / Features
 
-- (3) Seasonality in search
+- (1) Seasonality in search
+- (2) Change categories to be a visible clickable list and not a search
+- (3) Improve front design
 - Portions of ingredients (how to handle units ? conversion info)
 - Instructions, temperature and mode, cooking time and total time, origin, comments
 - Think about exclusion on the filter (at least ingredient)
