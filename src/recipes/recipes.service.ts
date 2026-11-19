@@ -1,5 +1,5 @@
 
-import { FindOptionsWhere, ILike, In, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Recipe } from './entities/recipe.entity.js';

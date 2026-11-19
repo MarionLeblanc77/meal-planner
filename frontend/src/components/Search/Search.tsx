@@ -20,7 +20,7 @@ function Search<T extends Searchable>({
   const [isActive, setIsActive] = useState<boolean>(false)
 
   return (
-    <div> 
+    <div>
       {isLoading && <div className="spinner">Loading...</div>}
       {isError && <div className="error">Error : {error?.message}</div>}
       <input
@@ -44,7 +44,7 @@ function Search<T extends Searchable>({
           +
         </button>
       )}
-      {(isAlwaysVisible || isActive) && searchResult.length === 0
+      {searchResult.length === 0
         ? <p>{emptySearchMsg}</p>
         : (isAlwaysVisible || isActive) && (
           <ul>

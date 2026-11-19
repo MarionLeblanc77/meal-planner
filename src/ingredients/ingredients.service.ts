@@ -1,4 +1,4 @@
-import { Repository, ILike } from 'typeorm';
+import { Repository, ILike, In, Not } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ingredient } from './entities/ingredient.entity.js';
@@ -22,6 +22,26 @@ export class IngredientsService {
 
   async search(searchIngredientDto: PartialIngredientDto): Promise<Ingredient[]> {
     return await this.ingredientRepository.findBy({ name: ILike(`%${searchIngredientDto.name}%`) });
+  }
+
+  async findTop10NotSelected(ingredients: Ingredient[]): Promise<Ingredient[]> {
+    const ingredientIds = ingredients.map((ing) => ing.id);
+
+    const query = this.ingredientRepository
+      .createQueryBuilder('ingredient')
+      .leftJoin('ingredient.recipes', 'recipe')
+      .addSelect('COUNT(recipe.id)', 'recipeCount');
+
+    if (ingredientIds.length > 0) {
+      query.where('ingredient.id NOT IN (:...ingredientIds)');
+    }
+
+    query.groupBy('ingredient.id')
+      .orderBy('recipeCount', 'DESC')
+      .limit(10)
+      .setParameters({ ingredientIds });
+    
+    return await query.getMany();
   }
 
   async findOne(id: number): Promise<Ingredient | null> {

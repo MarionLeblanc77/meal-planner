@@ -23,6 +23,11 @@ export class IngredientsController {
   async search(@Body() searchIngredientDto: PartialIngredientDto) : Promise<Ingredient[]>  {
     return this.ingredientsService.search(searchIngredientDto);
   }
+
+  @Post('search/top10-not-selected')
+  async findTop10NotSelected(@Body() ingredients: Ingredient[]) : Promise<Ingredient[]>  {
+    return this.ingredientsService.findTop10NotSelected(ingredients);
+  }
   
   @Get(':id')
   async findOne(@Param('id') id: number) : Promise<Ingredient> {

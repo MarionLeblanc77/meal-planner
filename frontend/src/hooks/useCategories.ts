@@ -38,7 +38,7 @@ async function searchCategories(searchInput: CategoryInput): Promise<Category[]>
 export function useSearchCategories(searchInput: CategoryInput | undefined) {
   return useQuery({
     queryKey: ['search', 'categories', searchInput],
-    queryFn: searchInput === undefined || searchInput.name === '' ? skipToken : () => searchCategories(searchInput),
+    queryFn: searchInput === undefined || searchInput.name === '' ? fetchCategories : () => searchCategories(searchInput),
     staleTime: 1000 * 60 * 2,
     select: (data) => data
   })

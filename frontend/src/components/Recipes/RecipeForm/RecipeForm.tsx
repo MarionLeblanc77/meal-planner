@@ -24,7 +24,7 @@ function RecipeForm() {
   // TODO!: factorize ingredients and categories search and add to a custom hook to avoid code duplication
   const [ingredients, setIngredients] = useState<Recipe['ingredients']>(recipe?.ingredients ?? draft?.ingredients ?? []);
   const [searchedIngredient, setSearchedIngredient] = useState<string>('')
-  const { data : ingredientsData, isLoading: isLoadingIngredientSearch, isError: isErrorIngredientSearch, error: errorIngredientSearch } = useSearchIngredients({ name: searchedIngredient.trim().toLowerCase() })
+  const { data : ingredientsData, isLoading: isLoadingIngredientSearch, isError: isErrorIngredientSearch, error: errorIngredientSearch } = useSearchIngredients({ name: searchedIngredient.trim().toLowerCase() }, ingredients);
   const ingredientList = ingredientsData ?? []
 
   const addIngredient = ({searchedIngredientID, searchedIngredient}: {searchedIngredientID: number | undefined, searchedIngredient: string}) => {

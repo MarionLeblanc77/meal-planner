@@ -34,12 +34,14 @@ function RecipeSearch() {
   const recipes = recipesData ?? []
 
   const [searchIngredient, setSearchIngredient] = useState<string>('')
-  const { data : ingredientsData, isLoading: isLoadingIngredientSearch, isError: isErrorIngredientSearch, error: errorIngredientSearch } = useSearchIngredients({ name: searchIngredient.trim().toLowerCase() })
+  const { data : ingredientsData, isLoading: isLoadingIngredientSearch, isError: isErrorIngredientSearch, error: errorIngredientSearch } = useSearchIngredients({ name: searchIngredient.trim().toLowerCase() }, searchedIngredientsList);
   const ingredients = ingredientsData ?? []
 
   const [searchCategory, setSearchCategory] = useState<string>('')
   const { data : categoriesData, isLoading: isLoadingCategorySearch, isError: isErrorCategorySearch, error: errorCategorySearch } = useSearchCategories({ name: searchCategory.trim().toLowerCase() })
   const categories = categoriesData ?? []
+
+  console.log('searchedIngredientsList:', searchedIngredientsList)
 
   return (
     <>    

@@ -12,7 +12,7 @@ export function useRecipes() {
     queryKey: ['recipes'],
     queryFn: fetchRecipes, 
     staleTime: 1000 * 60 * 2, 
-    select: (data) => data.slice(0, 20),
+    select: (data) => data,
   })
 }
 
@@ -41,7 +41,7 @@ export function useSearchRecipes(searchInput: RecipeInput | undefined) {
     (!!searchInput.name || (searchInput.ingredientIds?.length ?? 0) > 0 || (searchInput.categoryIds?.length ?? 0) > 0);
   return useQuery({
     queryKey: ['search', 'recipes', searchInput],
-    queryFn: !hasCriteria? skipToken : () => searchRecipes(searchInput),
+    queryFn: !hasCriteria ? fetchRecipes : () => searchRecipes(searchInput),
     staleTime: 1000 * 60 * 2,
     select: (data) => data
   })

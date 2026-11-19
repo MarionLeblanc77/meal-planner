@@ -16,6 +16,20 @@ export function useIngredients() {
   })
 }
 
+async function fetchTop10NotSelectedIngredients(ingredients: IngredientInput[]): Promise<Ingredient[]> {
+  const result = await axiosInstance.post("http://[::1]:3000/ingredients/search/top10-not-selected", ingredients);
+  return result.data;
+}
+
+export function useTop10NotSelectedIngredients(ingredients: IngredientInput[] | undefined) {
+  return useQuery({
+    queryKey: ['search', 'ingredients', 'top10-not-selected'],
+    queryFn: () => fetchTop10NotSelectedIngredients(ingredients || []),
+    staleTime: 1000 * 60 * 2,
+    select: (data) => data
+  })
+}
+
 async function fetchIngredient(id: number): Promise<Ingredient> {
   const result = await axiosInstance.get(`http://[::1]:3000/ingredients/${id}`);
   return result.data;
@@ -35,10 +49,10 @@ async function searchIngredients(searchInput: IngredientInput): Promise<Ingredie
   return result.data;
 }
 
-export function useSearchIngredients(searchInput: IngredientInput | undefined) {
+export function useSearchIngredients(searchInput: IngredientInput | undefined, ingredients: IngredientInput[] | undefined) {
   return useQuery({
-    queryKey: ['search', 'ingredients', searchInput],
-    queryFn: searchInput === undefined || searchInput.name === '' ? skipToken : () => searchIngredients(searchInput),
+    queryKey: ['search', 'ingredients', searchInput, ingredients],
+    queryFn: searchInput === undefined || searchInput.name === '' ? () => fetchTop10NotSelectedIngredients(ingredients || []) : () => searchIngredients(searchInput),
     staleTime: 1000 * 60 * 2,
     select: (data) => data
   })
