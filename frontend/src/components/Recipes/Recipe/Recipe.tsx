@@ -27,6 +27,11 @@ function Recipe() {
                   <li key={ingredient.id}>{ingredient.name}</li>
                 ))}
               </ul>
+              <ul>
+                {recipe.categories.map((category) => (
+                  <li key={category.id}>{category.name}</li>
+                ))}
+              </ul>
           </div>
           <Link to={`/recipes/${recipe.id}/edit`}>Change this recipe</Link>
         </>

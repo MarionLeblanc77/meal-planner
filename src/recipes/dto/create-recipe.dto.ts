@@ -1,6 +1,7 @@
 import { IsString, IsOptional, IsInt, Length, IsEnum, IsArray, ValidateNested } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { CreateIngredientDto } from '../../ingredients/dto/create-ingredient.dto.js';
+import { CreateCategoryDto } from '../../categories/dto/create-category.dto.js';
 
 export enum RecipeStatus {
   'Totry' = 0,
@@ -32,4 +33,10 @@ export class CreateRecipeDto {
   @ValidateNested({ each: true })
   @Type(() => CreateIngredientDto)
   ingredients: CreateIngredientDto[];
+  
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => CreateCategoryDto)
+  categories: CreateCategoryDto[];
 }

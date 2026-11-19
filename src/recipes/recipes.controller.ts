@@ -11,7 +11,6 @@ export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}
 
   @Post()
-  // @Redirect('/recipes', 301)
   async create(@Body() createRecipeDto: CreateRecipeDto) : Promise<void>  {
     await this.recipesService.create(createRecipeDto);
     return;
@@ -36,12 +35,6 @@ export class RecipesController {
       return recipe 
     };
   }
-
-  // TODO: do the route for recipe filter
-  // @Get()
-  // findAllWith(@Query('name') name: string, @Query('basePortions') basePortions: number) : string {
-  //   return `This action will return all recipes filtered by name: ${name} and base portions: ${basePortions}`;
-  // }
 
   @Get('/:id/edit')
   async findOneToEdit(@Param('id') id: number) : Promise<{ recipe: Recipe | null }> {
