@@ -41,8 +41,6 @@ function RecipeSearch() {
   const { data : categoriesData, isLoading: isLoadingCategorySearch, isError: isErrorCategorySearch, error: errorCategorySearch } = useSearchCategories({ name: searchCategory.trim().toLowerCase() })
   const categories = categoriesData ?? []
 
-  console.log('searchedIngredientsList:', searchedIngredientsList)
-
   return (
     <>    
       <h2>Search a Recipe</h2>
@@ -61,6 +59,7 @@ function RecipeSearch() {
               emptySearchMsg="No ingredients found" 
               onClickLabel={({searchItemID, searchItem}) => {setSearchedIngredientsList([...searchedIngredientsList, {name: searchItem, id: searchItemID}])}} 
               inputProps={{ name: "ingredient", id: "ingredient" }}
+              resultsOnTop={true}
              />
             <div className="switch">
               <p>Or</p>

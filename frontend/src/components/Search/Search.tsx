@@ -1,5 +1,6 @@
 import {useState } from 'react'
 import type { Searchable } from '../../types/search'
+import './Search.css'
 
 interface SearchComponentProps<Searchable> {
   searchItem: string;
@@ -13,10 +14,11 @@ interface SearchComponentProps<Searchable> {
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
   addOption?: boolean;
   isAlwaysVisible?: boolean;
+  resultsOnTop?: boolean;
 }
 
 function Search<T extends Searchable>({ 
-  searchItem, setSearchItem, isLoading, isError, error, searchResult = [], emptySearchMsg = 'No items found', onClickLabel = undefined, inputProps = {}, addOption = false, isAlwaysVisible = false }: SearchComponentProps<T>) {
+  searchItem, setSearchItem, isLoading, isError, error, searchResult = [], emptySearchMsg = 'No items found', onClickLabel = undefined, inputProps = {}, addOption = false, isAlwaysVisible = false, resultsOnTop = false }: SearchComponentProps<T>) {
   const [isActive, setIsActive] = useState<boolean>(false)
 
   return (
@@ -29,6 +31,15 @@ function Search<T extends Searchable>({
         onChange={e => setSearchItem(e.target.value)}        
         onFocus={() => setIsActive(true)}
         onBlur={() => setIsActive(false)}
+        onKeyDown={e => {
+          if (e.key === 'Enter'){
+            e.preventDefault()
+            if (searchItem.trim() !== '' && addOption) {
+              onClickLabel?.({searchItemID: undefined, searchItem})
+              setSearchItem('')
+            }
+          }
+        }}
         placeholder='Type to search'
         {...inputProps}
       />
@@ -44,27 +55,29 @@ function Search<T extends Searchable>({
           +
         </button>
       )}
-      {searchResult.length === 0
-        ? <p>{emptySearchMsg}</p>
-        : (isAlwaysVisible || isActive) && (
-          <ul>
-            {searchResult.map(item =>
-              <li key={item.id}>
-                <button 
-                  type="button"   
-                  onMouseDown={event => event.preventDefault()}
-                  onClick={() => {
-                    onClickLabel?.({searchItemID: item.id, searchItem: item.name})
-                    setSearchItem('')
-                  }}
-                >
-                  {item.name}
-                </button>
-              </li>
-            )}
-          </ul>
-        )
-      }
+      <div className={`${resultsOnTop ? 'results top' : 'results'}`}>
+        {isActive && searchResult.length === 0
+          ? <p>{emptySearchMsg}</p>
+          : (isAlwaysVisible || isActive) && (
+            <ul>
+              {searchResult.map(item =>
+                <li key={item.id}>
+                  <button 
+                    type="button"   
+                    onMouseDown={event => event.preventDefault()}
+                    onClick={() => {
+                      onClickLabel?.({searchItemID: item.id, searchItem: item.name})
+                      setSearchItem('')
+                    }}
+                  >
+                    {item.name}
+                  </button>
+                </li>
+              )}
+            </ul>
+          )
+        }
+      </div>
     </div>
   )
 }

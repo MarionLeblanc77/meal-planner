@@ -128,6 +128,7 @@ function RecipeForm() {
               onClickLabel={({searchItemID, searchItem}) => addIngredient({searchedIngredientID : searchItemID, searchedIngredient : searchItem})} 
               inputProps={{ name: "ingredient", id: "ingredient" }}
               addOption={true}
+              resultsOnTop={true}
              />
             <ul>
               {ingredients.map((ingredient, index) => (

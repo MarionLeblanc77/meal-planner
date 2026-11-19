@@ -2,9 +2,9 @@
 
 ## Fixes
 
-- (1) Full list of categories when search is empty & top 10 (without already clicked) used for ingredients. Put list on top to not push other things
-- (2) In the recipe creation/update form, when done with adding ingredients, the first click on the update recipe button does not work (there is some kind of unfocus thing happening first and small jump because of disappearance of the "No Ingredient found"). 
 - (3) In the recipe creation/update form, when done adding ingredients, pressing enter send the global recipe form (would be nice to be the Ingredient addition)
+- (4) deletion button on recipe doesn't work
+- (5) Attention, handling double ingredients or categories : at creation AND at selection for the searches
 
 ## Translation
 
