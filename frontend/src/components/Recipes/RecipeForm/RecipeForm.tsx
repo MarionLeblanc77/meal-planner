@@ -2,15 +2,12 @@ import { useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useSearchIngredients } from "../../../hooks/useIngredients";
 import { useCreateOrEditRecipe, useRecipe } from "../../../hooks/useRecipes";
+import { useSearchCategories } from "../../../hooks/useCategories";
 import type { Recipe } from "../../../types/recipe";
 import type { IngredientInput } from "../../../types/ingredient";
-import type { DraftIngredient, ImportReviewState } from "../../../types/importer";
+import type { ImportReviewState } from "../../../types/importer";
 import Search from "../../Search/Search";
 import "../RecipeImport/RecipeImport.css";
-
-/** Display-only fields an imported ingredient carries; stripped before saving. */
-type FormIngredient = IngredientInput & Partial<Pick<DraftIngredient, "isNew" | "originalName" | "quantity" | "note" | "group">>;
-import { useSearchCategories } from "../../../hooks/useCategories";
 
 function RecipeForm() {
   const navigate = useNavigate();
@@ -25,7 +22,6 @@ function RecipeForm() {
   const createOrEditRecipe = useCreateOrEditRecipe(recipeId ? parseInt(recipeId) : undefined);
 
   // TODO!: factorize ingredients and categories search and add to a custom hook to avoid code duplication
-  // (NICK) const [ingredients, setIngredients] = useState<FormIngredient[]>(recipe?.ingredients ?? draft?.ingredients ?? []);
   const [ingredients, setIngredients] = useState<Recipe['ingredients']>(recipe?.ingredients ?? draft?.ingredients ?? []);
   const [searchedIngredient, setSearchedIngredient] = useState<string>('')
   const { data : ingredientsData, isLoading: isLoadingIngredientSearch, isError: isErrorIngredientSearch, error: errorIngredientSearch } = useSearchIngredients({ name: searchedIngredient.trim().toLowerCase() })
@@ -61,9 +57,6 @@ function RecipeForm() {
       instructions: formData.get('instructions') as Recipe['instructions'],
       basePortions: formData.get('basePortions') ? parseInt(formData.get('basePortions') as string) : 0 as Recipe['basePortions'],
       status: formData.get('status') as Recipe['status'],
-      // Imported ingredients carry display-only fields the API doesn't know about.
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      // (NICK) ingredients: ingredients.map(({ isNew, originalName, quantity, note, group, ...ingredient }) => ingredient) as Recipe['ingredients']
       ingredients: ingredients,
       categories: categories
     })

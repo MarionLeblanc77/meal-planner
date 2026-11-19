@@ -41,9 +41,6 @@ function RecipeSearch() {
   const { data : categoriesData, isLoading: isLoadingCategorySearch, isError: isErrorCategorySearch, error: errorCategorySearch } = useSearchCategories({ name: searchCategory.trim().toLowerCase() })
   const categories = categoriesData ?? []
 
-  console.log("RecipeSearch - searchedIngredientsList:", searchedIngredientsList)
-  console.log("RecipeSearch - searchedCategoriesList:", searchedCategoriesList)
-
   return (
     <>    
       <h2>Search a Recipe</h2>
