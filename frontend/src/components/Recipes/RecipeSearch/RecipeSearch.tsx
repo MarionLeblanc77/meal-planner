@@ -1,15 +1,21 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
+import Switch from '@mui/material/Switch';
 import { useSearchRecipes } from "../../../hooks/useRecipes";
 import type { IngredientInput } from "../../../types/ingredient";
 import Search from "../../Search/Search"
 import "./RecipeSearch.css"
 import { useSearchIngredients } from "../../../hooks/useIngredients";
+import type { CategoryInput } from "../../../types/category";
+import { useSearchCategories } from "../../../hooks/useCategories";
 
 function RecipeSearch() {
   const navigate = useNavigate();
 
+  const [ingredientChecked, setIngredientChecked] = useState<boolean>(false);
   const [searchedIngredientsList, setSearchedIngredientsList] = useState<IngredientInput[]>([])
+  const [categoryChecked, setCategoryChecked] = useState<boolean>(false);
+  const [searchedCategoriesList, setSearchedCategoriesList] = useState<CategoryInput[]>([])
 
   const [searchRecipe, setSearchRecipe] = useState<string>('')
   const { 
@@ -19,7 +25,10 @@ function RecipeSearch() {
     error: errorRecipeSearch 
   } = useSearchRecipes(
     { name: searchRecipe.trim().toLowerCase(), 
-      ingredientIds: searchedIngredientsList.map((ingredient) => ingredient?.id).filter((id): id is number => !!id)
+      ingredientIds: searchedIngredientsList.map((ingredient) => ingredient?.id).filter((id): id is number => !!id),
+      hasAllIngredients: ingredientChecked,
+      categoryIds: searchedCategoriesList.map((category) => category?.id).filter((id): id is number => !!id),
+      hasAllCategories: categoryChecked
     }
   )
   const recipes = recipesData ?? []
@@ -28,6 +37,12 @@ function RecipeSearch() {
   const { data : ingredientsData, isLoading: isLoadingIngredientSearch, isError: isErrorIngredientSearch, error: errorIngredientSearch } = useSearchIngredients({ name: searchIngredient.trim().toLowerCase() })
   const ingredients = ingredientsData ?? []
 
+  const [searchCategory, setSearchCategory] = useState<string>('')
+  const { data : categoriesData, isLoading: isLoadingCategorySearch, isError: isErrorCategorySearch, error: errorCategorySearch } = useSearchCategories({ name: searchCategory.trim().toLowerCase() })
+  const categories = categoriesData ?? []
+
+  console.log("RecipeSearch - searchedIngredientsList:", searchedIngredientsList)
+  console.log("RecipeSearch - searchedCategoriesList:", searchedCategoriesList)
 
   return (
     <>    
@@ -48,15 +63,53 @@ function RecipeSearch() {
               onClickLabel={({searchItemID, searchItem}) => {setSearchedIngredientsList([...searchedIngredientsList, {name: searchItem, id: searchItemID}])}} 
               inputProps={{ name: "ingredient", id: "ingredient" }}
              />
+            <div className="switch">
+              <p>Or</p>
+              <Switch 
+                checked={ingredientChecked} 
+                onChange={(e) => setIngredientChecked(e.target.checked)} 
+              />
+              <p>And</p>
+            </div>
+            <ul id="recipe_search_criteria_ingredients_list">
+              {searchedIngredientsList.map((ingredient) => (
+                <li key={ingredient.id}>
+                  {ingredient.name}
+                  <button onClick={() => setSearchedIngredientsList(searchedIngredientsList.filter((i) => i.id !== ingredient.id))}>X</button>
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul id="recipe_search_criteria_ingredients_list">
-            {searchedIngredientsList.map((ingredient) => (
-              <li key={ingredient.id}>
-                {ingredient.name}
-                <button onClick={() => setSearchedIngredientsList(searchedIngredientsList.filter((i) => i.id !== ingredient.id))}>X</button>
-              </li>
-            ))}
-          </ul>
+          <div id="recipe_search_criteria_categories" className="recipe_search_criteria_item">
+            <h3>With this/those category(ies):</h3>
+            <Search 
+              searchItem={searchCategory} 
+              setSearchItem={setSearchCategory} 
+              isLoading={isLoadingCategorySearch} 
+              isError={isErrorCategorySearch} 
+              error={errorCategorySearch} 
+              searchResult={categories} 
+              emptySearchMsg="No categories found" 
+              onClickLabel={({searchItemID, searchItem}) => {setSearchedCategoriesList([...searchedCategoriesList, {name: searchItem, id: searchItemID}])}} 
+              inputProps={{ name: "category", id: "category" }}
+             />
+            <div className="switch">
+              <p>Or</p>
+              <Switch 
+                checked={categoryChecked} 
+                onChange={(e) => setCategoryChecked(e.target.checked)} 
+              />
+              <p>And</p>
+            </div>
+            <ul id="recipe_search_criteria_categories_list">
+              {searchedCategoriesList.map((category) => (
+                <li key={category.id}>
+                  {category.name}
+                  <button onClick={() => setSearchedCategoriesList(searchedCategoriesList.filter((c) => c.id !== category.id))}>X</button>
+                </li>
+              ))}
+            </ul>
+          </div>  
         </div>
         <div id="recipe_search_results">
           <Search 

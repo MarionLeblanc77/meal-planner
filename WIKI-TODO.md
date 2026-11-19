@@ -2,8 +2,9 @@
 
 ## Fixes
 
-- In the recipe creation/update form, when done with adding ingredients, the first click on the update recipe button does not work (there is some kind of unfocus thing happening first and small jump because of disappearance of the "No Ingredient found")
-- In the recipe creation/update form, when done adding ingredients, pressing enter send the global recipe form (would be nice to be the Ingredient addition)
+- (1) Full list of categories when search is empty & top 10 (without already clicked) used for ingredients. Put list on top to not push other things
+- (2) In the recipe creation/update form, when done with adding ingredients, the first click on the update recipe button does not work (there is some kind of unfocus thing happening first and small jump because of disappearance of the "No Ingredient found"). 
+- (3) In the recipe creation/update form, when done adding ingredients, pressing enter send the global recipe form (would be nice to be the Ingredient addition)
 
 ## Translation
 
@@ -19,5 +20,9 @@ Common decision 26/09/17 :
 
 ## Design / Features
 
+- (3) Seasonality in search
+- Portions of ingredients (how to handle units ? conversion info)
+- Instructions, temperature and mode, cooking time and total time, origin, comments
 - Think about exclusion on the filter (at least ingredient)
 - Last added, last seen and top used the past rolling 6 months on the meal planning page
+- Equipement options in search

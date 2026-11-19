@@ -1,15 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RecipesModule } from './recipes/recipes.module.js';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
-import { IngredientsModule } from './ingredients/ingredients.module.js';
 import { ImporterModule } from './importer/importer.module.js';
+import { RecipesModule } from './recipes/recipes.module.js';
+import { IngredientsModule } from './ingredients/ingredients.module.js';
+import { CategoriesModule } from './categories/categories.module.js';
 
 @Module({
   imports: [
     RecipesModule,
+    IngredientsModule,
+    CategoriesModule,    
+    ImporterModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -23,8 +27,6 @@ import { ImporterModule } from './importer/importer.module.js';
       autoLoadEntities: true,
       synchronize: process.env.ENVIRONMENT === 'dev',
     }),
-    IngredientsModule,
-    ImporterModule,
   ],
   controllers: [AppController],
   providers: [AppService],

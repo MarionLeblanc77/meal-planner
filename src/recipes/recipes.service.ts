@@ -23,24 +23,75 @@ export class RecipesService {
   }
   
   async search(searchRecipeDto: SearchRecipeDto): Promise<Recipe[]> {
-    const where: FindOptionsWhere<Recipe> = {};
+    const query = this.recipeRepository
+      .createQueryBuilder('recipe')
+      .leftJoinAndSelect('recipe.ingredients', 'ingredient')
+      .leftJoinAndSelect('recipe.categories', 'category');
+
     const name = searchRecipeDto.name;
-
     if (name && name.trim() !== '') {
-      where.name = ILike(`%${name}%`);
+      query.where({ name: ILike(`%${name}%`) });
     }
 
-    if (searchRecipeDto.ingredientIds?.length) {
-      where.ingredients = { id: In(searchRecipeDto.ingredientIds) };
+    const ingredientIds = [...new Set(searchRecipeDto.ingredientIds ?? [])];
+    const hasAllIngredients = searchRecipeDto.hasAllIngredients;
+    if (ingredientIds.length > 0) {
+      if (hasAllIngredients) {
+        query.andWhere('recipe.id IN (:...ingredientIds)', { ingredientIds });
+      } else {
+        query.andWhere((qb) => {
+          const matchingRecipes = qb
+            .subQuery()
+            .select('matchedRecipe.id')
+            .from(Recipe, 'matchedRecipe')
+            .innerJoin('matchedRecipe.ingredients', 'matchedIngredient')
+            .where('matchedIngredient.id IN (:...ingredientIds)')
+            .groupBy('matchedRecipe.id')
+            .having('COUNT(DISTINCT matchedIngredient.id) = :ingredientCount')
+            .getQuery();
+
+          return `recipe.id IN ${matchingRecipes}`;
+        })
+        .setParameters({
+          ingredientIds,
+          ingredientCount: ingredientIds.length,
+        })
+      }
     }
 
-    return await this.recipeRepository.findBy(where);
+    const categoryIds = [...new Set(searchRecipeDto.categoryIds ?? [])];
+    const hasAllCategories = searchRecipeDto.hasAllCategories;
+    if (categoryIds.length > 0) {
+      if (hasAllCategories) {
+        query.andWhere('recipe.id IN (:...categoryIds)', { categoryIds });
+      } else {
+        query.andWhere((qb) => {
+          const matchingRecipes = qb
+            .subQuery()
+            .select('matchedRecipe.id')
+            .from(Recipe, 'matchedRecipe')
+            .innerJoin('matchedRecipe.categories', 'matchedCategory')
+            .where('matchedCategory.id IN (:...categoryIds)')
+            .groupBy('matchedRecipe.id')
+            .having('COUNT(DISTINCT matchedCategory.id) = :categoryCount')
+            .getQuery();
+
+          return `recipe.id IN ${matchingRecipes}`;
+        })
+        .setParameters({
+          categoryIds,
+          categoryCount: categoryIds.length,
+        })
+      }
+    }
+
+    return query.getMany();
   }
 
   async findOne(id: number): Promise<Recipe | null> {
     return await this.recipeRepository.findOne({
       where: { id },
-      relations: { ingredients: true },
+      relations: { ingredients: true, categories: true },
     });
   }
 

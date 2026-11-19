@@ -10,6 +10,7 @@ import "../RecipeImport/RecipeImport.css";
 
 /** Display-only fields an imported ingredient carries; stripped before saving. */
 type FormIngredient = IngredientInput & Partial<Pick<DraftIngredient, "isNew" | "originalName" | "quantity" | "note" | "group">>;
+import { useSearchCategories } from "../../../hooks/useCategories";
 
 function RecipeForm() {
   const navigate = useNavigate();
@@ -22,11 +23,32 @@ function RecipeForm() {
 
   const { data: recipe, isLoading, isError, error, isFetching } = useRecipe(recipeId ? parseInt(recipeId) : undefined);
   const createOrEditRecipe = useCreateOrEditRecipe(recipeId ? parseInt(recipeId) : undefined);
-  const [ingredients, setIngredients] = useState<FormIngredient[]>(recipe?.ingredients ?? draft?.ingredients ?? []);
 
-  const [searchItem, setSearchItem] = useState<string>('')
-  const { data, isLoading: isLoadingSearch, isError: isErrorSearch, error: errorSearch } = useSearchIngredients({ name: searchItem.trim().toLowerCase() })
-  const items = data ?? []
+  // TODO!: factorize ingredients and categories search and add to a custom hook to avoid code duplication
+  // (NICK) const [ingredients, setIngredients] = useState<FormIngredient[]>(recipe?.ingredients ?? draft?.ingredients ?? []);
+  const [ingredients, setIngredients] = useState<Recipe['ingredients']>(recipe?.ingredients ?? draft?.ingredients ?? []);
+  const [searchedIngredient, setSearchedIngredient] = useState<string>('')
+  const { data : ingredientsData, isLoading: isLoadingIngredientSearch, isError: isErrorIngredientSearch, error: errorIngredientSearch } = useSearchIngredients({ name: searchedIngredient.trim().toLowerCase() })
+  const ingredientList = ingredientsData ?? []
+
+  const addIngredient = ({searchedIngredientID, searchedIngredient}: {searchedIngredientID: number | undefined, searchedIngredient: string}) => {
+    if (searchedIngredient.trim() !== '') {
+      const newIngredient: IngredientInput = { id: searchedIngredientID, name: searchedIngredient.trim() };
+      setIngredients([...ingredients, newIngredient]);      
+    }
+  }
+
+  const [categories, setCategories] = useState<Recipe['categories']>(recipe?.categories ?? []);
+  const [searchedCategory, setSearchedCategory] = useState<string>('')
+  const { data : categoriesData, isLoading: isLoadingCategorySearch, isError: isErrorCategorySearch, error: errorCategorySearch } = useSearchCategories({ name: searchedCategory.trim().toLowerCase() })
+  const categoryList = categoriesData ?? []
+
+  const addCategory = ({searchedCategoryID, searchedCategory}: {searchedCategoryID: number | undefined, searchedCategory: string}) => {
+    if (searchedCategory.trim() !== '') {
+      const newCategory: IngredientInput = { id: searchedCategoryID, name: searchedCategory.trim() };
+      setCategories([...categories, newCategory]);      
+    }
+  }
 
   if (isLoading) return <div className="spinner">Loading...</div>
   if (isError) return <div className="error">Error : {error.message}</div>
@@ -41,16 +63,11 @@ function RecipeForm() {
       status: formData.get('status') as Recipe['status'],
       // Imported ingredients carry display-only fields the API doesn't know about.
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ingredients: ingredients.map(({ isNew, originalName, quantity, note, group, ...ingredient }) => ingredient) as Recipe['ingredients']
+      // (NICK) ingredients: ingredients.map(({ isNew, originalName, quantity, note, group, ...ingredient }) => ingredient) as Recipe['ingredients']
+      ingredients: ingredients,
+      categories: categories
     })
     navigate(importState?.returnTo ?? '/recipes');
-  }
-
-  const addIngredient = ({searchItemID, searchItem}: {searchItemID: number | undefined, searchItem: string}) => {
-    if (searchItem.trim() !== '') {
-      const newIngredient: IngredientInput = { id: searchItemID, name: searchItem.trim() };
-      setIngredients([...ingredients, newIngredient]);      
-    }
   }
 
   return (
@@ -108,14 +125,14 @@ function RecipeForm() {
         <div>
           <label>Ingredients:
             <Search 
-              searchItem={searchItem} 
-              setSearchItem={setSearchItem} 
-              isLoading={isLoadingSearch} 
-              isError={isErrorSearch} 
-              error={errorSearch} 
-              searchResult={items} 
+              searchItem={searchedIngredient} 
+              setSearchItem={setSearchedIngredient} 
+              isLoading={isLoadingIngredientSearch} 
+              isError={isErrorIngredientSearch} 
+              error={errorIngredientSearch} 
+              searchResult={ingredientList} 
               emptySearchMsg="No ingredients found" 
-              onClickLabel={({searchItemID, searchItem}) => addIngredient({searchItemID, searchItem})} 
+              onClickLabel={({searchItemID, searchItem}) => addIngredient({searchedIngredientID : searchItemID, searchedIngredient : searchItem})} 
               inputProps={{ name: "ingredient", id: "ingredient" }}
               addOption={true}
              />
@@ -130,6 +147,30 @@ function RecipeForm() {
                     </span>
                   )}
                   <button type="button" onClick={() => setIngredients(ingredients.filter((_, i) => i !== index))}>X</button>
+                </li>
+              ))}
+            </ul>
+          </label>
+        </div>
+        <div>
+          <label>Categories:
+            <Search 
+              searchItem={searchedCategory} 
+              setSearchItem={setSearchedCategory} 
+              isLoading={isLoadingCategorySearch} 
+              isError={isErrorCategorySearch} 
+              error={errorCategorySearch} 
+              searchResult={categoryList} 
+              emptySearchMsg="No categories found" 
+              onClickLabel={({searchItemID, searchItem}) => addCategory({searchedCategoryID : searchItemID, searchedCategory : searchItem})} 
+              inputProps={{ name: "category", id: "category" }}
+              addOption={true}
+             />
+            <ul>
+              {categories.map((category, index) => (
+                <li key={index}>
+                  {category.name}
+                  <button type="button" onClick={() => setCategories(categories.filter((_, i) => i !== index))}>X</button>
                 </li>
               ))}
             </ul>

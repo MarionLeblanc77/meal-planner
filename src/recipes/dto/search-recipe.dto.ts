@@ -1,4 +1,4 @@
-import { IsArray, IsInt, IsOptional, IsString, Length } from 'class-validator';
+import { IsArray, IsBoolean, IsInt, IsOptional, IsString, Length } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class SearchRecipeDto  {
@@ -12,4 +12,18 @@ export class SearchRecipeDto  {
     @IsInt({ each: true })
     @Type(() => Number)
     ingredientIds?: number[];
+
+    @IsOptional()
+    @IsBoolean()
+    hasAllIngredients?: boolean = false;
+
+    @IsOptional()
+    @IsArray()
+    @IsInt({ each: true })
+    @Type(() => Number)
+    categoryIds?: number[];
+
+    @IsOptional()
+    @IsBoolean()
+    hasAllCategories?: boolean = false;
 }

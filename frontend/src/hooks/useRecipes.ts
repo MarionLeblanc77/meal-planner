@@ -38,7 +38,7 @@ async function searchRecipes(searchInput: RecipeInput): Promise<Recipe[]> {
 export function useSearchRecipes(searchInput: RecipeInput | undefined) {
   const hasCriteria = 
     !!searchInput &&  
-    (!!searchInput.name || (searchInput.ingredientIds?.length ?? 0) > 0);
+    (!!searchInput.name || (searchInput.ingredientIds?.length ?? 0) > 0 || (searchInput.categoryIds?.length ?? 0) > 0);
   return useQuery({
     queryKey: ['search', 'recipes', searchInput],
     queryFn: !hasCriteria? skipToken : () => searchRecipes(searchInput),
