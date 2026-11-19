@@ -50,7 +50,8 @@ function RecipeForm() {
       instructions: formData.get('instructions') as Recipe['instructions'],
       basePortions: formData.get('basePortions') ? parseInt(formData.get('basePortions') as string) : 0 as Recipe['basePortions'],
       status: formData.get('status') as Recipe['status'],
-      ingredients: ingredients
+      ingredients: ingredients,
+      categories: categories
     })
     navigate('/recipes');
   }

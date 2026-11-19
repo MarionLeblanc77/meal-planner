@@ -18,6 +18,11 @@ export class CategoriesController {
   async findAll() : Promise< Category[]>  {
     return await this.categoriesService.findAll();
   }
+  
+  @Post('search')
+  async search(@Body() searchCategoryDto: PartialCategoryDto) : Promise<Category[]>  {
+    return this.categoriesService.search(searchCategoryDto);
+  }
 
   @Get(':id')
   async findOne(@Param('id') id: string) : Promise< Category>  {

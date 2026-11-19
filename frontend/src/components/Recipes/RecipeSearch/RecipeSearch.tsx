@@ -7,6 +7,7 @@ import Search from "../../Search/Search"
 import "./RecipeSearch.css"
 import { useSearchIngredients } from "../../../hooks/useIngredients";
 import type { CategoryInput } from "../../../types/category";
+import { useSearchCategories } from "../../../hooks/useCategories";
 
 function RecipeSearch() {
   const navigate = useNavigate();
@@ -37,8 +38,11 @@ function RecipeSearch() {
   const ingredients = ingredientsData ?? []
 
   const [searchCategory, setSearchCategory] = useState<string>('')
-  const { data : categoriesData, isLoading: isLoadingCategorySearch, isError: isErrorCategorySearch, error: errorCategorySearch } = useSearchIngredients({ name: searchCategory.trim().toLowerCase() })
+  const { data : categoriesData, isLoading: isLoadingCategorySearch, isError: isErrorCategorySearch, error: errorCategorySearch } = useSearchCategories({ name: searchCategory.trim().toLowerCase() })
   const categories = categoriesData ?? []
+
+  console.log("RecipeSearch - searchedIngredientsList:", searchedIngredientsList)
+  console.log("RecipeSearch - searchedCategoriesList:", searchedCategoriesList)
 
   return (
     <>    
