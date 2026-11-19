@@ -44,15 +44,15 @@ export function useIngredient(id: number | undefined) {
   })
 }
 
-async function searchIngredients(searchInput: IngredientInput): Promise<Ingredient[]> {
-  const result = await axiosInstance.post("http://[::1]:3000/ingredients/search", searchInput);
+async function searchIngredients(searchInput: IngredientInput, ingredients: IngredientInput[] | undefined): Promise<Ingredient[]> {
+  const result = await axiosInstance.post("http://[::1]:3000/ingredients/search", { name: searchInput.name, ingredients: ingredients?.map((ingredient) => ingredient.id) });
   return result.data;
 }
 
 export function useSearchIngredients(searchInput: IngredientInput | undefined, ingredients: IngredientInput[] | undefined) {
   return useQuery({
     queryKey: ['search', 'ingredients', searchInput, ingredients],
-    queryFn: searchInput === undefined || searchInput.name === '' ? () => fetchTop10NotSelectedIngredients(ingredients || []) : () => searchIngredients(searchInput),
+    queryFn: searchInput === undefined || searchInput.name === '' ? () => fetchTop10NotSelectedIngredients(ingredients || []) : () => searchIngredients(searchInput, ingredients),
     staleTime: 1000 * 60 * 2,
     select: (data) => data
   })

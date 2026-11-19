@@ -7,6 +7,7 @@ export class Category {
   id: number;
 
   @Column("varchar", { length: 255 })
+  @Column({ unique: true })
   name: string;
 
   @ManyToMany(() => Recipe, (recipe) => recipe.categories)

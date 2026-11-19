@@ -2,7 +2,6 @@
 
 ## Fixes
 
-- (3) In the recipe creation/update form, when done adding ingredients, pressing enter send the global recipe form (would be nice to be the Ingredient addition)
 - (4) deletion button on recipe doesn't work
 - (5) Attention, handling double ingredients or categories : at creation AND at selection for the searches
 

@@ -3,6 +3,7 @@ import { IngredientsService } from './ingredients.service.js';
 import { CreateIngredientDto } from './dto/create-ingredient.dto.js';
 import { PartialIngredientDto } from './dto/partial-ingredient.dto.js';
 import { Ingredient } from './entities/ingredient.entity.js';
+import { SearchIngredientDto } from './dto/search-ingredient.dto.js';
 
 //TODO: add exception handling and validation for the controller methods
 @Controller('ingredients')
@@ -20,7 +21,7 @@ export class IngredientsController {
   }
 
   @Post('search')
-  async search(@Body() searchIngredientDto: PartialIngredientDto) : Promise<Ingredient[]>  {
+  async search(@Body() searchIngredientDto: SearchIngredientDto) : Promise<Ingredient[]>  {
     return this.ingredientsService.search(searchIngredientDto);
   }
 

@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Ingredient } from './entities/ingredient.entity.js';
 import { CreateIngredientDto } from './dto/create-ingredient.dto.js';
 import { PartialIngredientDto } from './dto/partial-ingredient.dto.js';
+import { SearchIngredientDto } from './dto/search-ingredient.dto.js';
 
 @Injectable()
 export class IngredientsService {
@@ -20,8 +21,24 @@ export class IngredientsService {
     return await this.ingredientRepository.find();
   }
 
-  async search(searchIngredientDto: PartialIngredientDto): Promise<Ingredient[]> {
-    return await this.ingredientRepository.findBy({ name: ILike(`%${searchIngredientDto.name}%`) });
+  async search(searchIngredientDto: SearchIngredientDto): Promise<Ingredient[]> {
+    const ingredientIds = searchIngredientDto.ingredientIds || undefined;
+    const query = this.ingredientRepository
+      .createQueryBuilder('ingredient')
+      .where('ingredient.name like :name')
+      .setParameter('name', `%${searchIngredientDto.name}%`);
+
+    if (ingredientIds) {
+      query.andWhere('ingredient.id NOT IN (:...ingredientIds)')
+      .setParameters({ ingredientIds });
+    }
+    return await query.getMany();
+
+
+    // return await this.ingredientRepository.findBy({ 
+    //   name: ILike(`%${searchIngredientDto.name}%`),
+    //   ...(ingredientIds ? { id: Not(In(ingredientIds)) } : {})
+    // });
   }
 
   async findTop10NotSelected(ingredients: Ingredient[]): Promise<Ingredient[]> {
