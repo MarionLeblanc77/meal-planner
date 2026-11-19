@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
+import { ImporterModule } from './importer/importer.module.js';
 import { RecipesModule } from './recipes/recipes.module.js';
 import { IngredientsModule } from './ingredients/ingredients.module.js';
 import { CategoriesModule } from './categories/categories.module.js';
@@ -11,7 +12,8 @@ import { CategoriesModule } from './categories/categories.module.js';
   imports: [
     RecipesModule,
     IngredientsModule,
-    CategoriesModule,
+    CategoriesModule,    
+    ImporterModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

@@ -65,3 +65,5 @@ node_modules/
 build/
 tmp/
 temp/
+# Importer eval output
+importer-eval-results/

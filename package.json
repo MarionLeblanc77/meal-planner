@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {
-    "launch:dev":" docker compose up -d && start \"Backend\" cmd /k \"npm run start:dev\" && start \"Frontend\" cmd /k \"cd /d frontend && npm run dev\"",
+    "launch:dev": " docker compose up -d && start \"Backend\" cmd /k \"npm run start:dev\" && start \"Frontend\" cmd /k \"cd /d frontend && npm run dev\"",
     "build": "nest build",
     "deploy": "nest deploy",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -21,6 +21,7 @@
     "test:cov": "vitest run --coverage",
     "test:debug": "vitest --inspect-brk --no-file-parallelism",
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
+    "importer:eval": "nest build && node dist/importer/eval/run-eval.js",
     "typeorm": "typeorm-ts-node-commonjs"
   },
   "dependencies": {
@@ -30,13 +31,15 @@
     "@nestjs/mapped-types": "^12.0.0",
     "@nestjs/platform-express": "^12.0.1",
     "@nestjs/typeorm": "^12.0.1",
+    "@openrouter/sdk": "^1.5.40",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
     "hbs": "^4.3.1",
     "mysql2": "^3.24.4",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "typeorm": "^1.1.1"
+    "typeorm": "^1.1.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@nestjs/cli": "^12.0.0",
