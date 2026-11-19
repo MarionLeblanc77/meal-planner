@@ -1,9 +1,10 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDeleteRecipe, useRecipe } from "../../../hooks/useRecipes";
 import recipeStatusLabels from "../../../types/recipe-status";
 
 function Recipe() {
   const { recipeId } = useParams();
+  const navigate = useNavigate();
   const { data: recipe, isLoading, isError, error, isFetching } = useRecipe(recipeId ? parseInt(recipeId) : undefined);
   // TODO?: Make a unique delete button component if it makes sens visually
   const deleteRecipe = useDeleteRecipe();
@@ -19,7 +20,10 @@ function Recipe() {
           <div>
               <h1>{recipe.name}</h1>            
               {/* TODO?: Make a unique delete button component if it makes sens visually */}
-              <button type="button" onClick={() => deleteRecipe.mutate(recipe.id)}>X</button>
+              <button type="button" onClick={() => {
+                deleteRecipe.mutate(recipe.id)
+                navigate('/recipes');
+              }} >X</button>
               <p> Base Portions: {recipe.basePortions}</p>
               <p> Status: {recipeStatusLabels[recipe.status]}</p>
               <ul>
