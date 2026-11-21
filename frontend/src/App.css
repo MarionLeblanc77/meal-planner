@@ -9,3 +9,11 @@
   margin: 10px;
   text-align: left;
 }
+
+.chip_list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
+  list-style-type: none;
+}

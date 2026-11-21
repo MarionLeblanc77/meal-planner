@@ -12,7 +12,7 @@ function CategoryChip({ category, setSearchedCategoriesList, isActive }: Categor
   return (
     <button
       type="button"
-      className={`chip ${isActive ? 'active' : ''}`}
+      className={`chip ${isActive ? 'selected_chip' : ''}`}
       onClick={() => {
         if(isActive) {
           setSearchedCategoriesList((prev) => prev.filter((c) => c.id !== category.id))

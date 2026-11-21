@@ -62,6 +62,7 @@ function RecipeSearch() {
               onClickLabel={({searchItemID, searchItem}) => {setSearchedIngredientsList([...searchedIngredientsList, {name: searchItem, id: searchItemID}])}} 
               inputProps={{ name: "ingredient", id: "ingredient" }}
               resultsOnTop={true}
+              style='select'
              />
             <div className="switch">
               <p>Or</p>
@@ -92,7 +93,7 @@ function RecipeSearch() {
               />
               <p>And</p>
             </div>
-            <ul id="recipe_search_criteria_categories_list">
+            <ul id="recipe_search_criteria_categories_list" className="chip_list">
               {categories.map((category) => (
                 <li key={category.id}>
                   <CategoryChip category={category} setSearchedCategoriesList={setSearchedCategoriesList} isActive={searchedCategoriesList.includes(category)} />

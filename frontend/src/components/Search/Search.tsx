@@ -15,10 +15,11 @@ interface SearchComponentProps<Searchable> {
   addOption?: boolean;
   isAlwaysVisible?: boolean;
   resultsOnTop?: boolean;
+  style?: string;
 }
 
 function Search<T extends Searchable>({ 
-  searchItem, setSearchItem, isLoading, isError, error, searchResult = [], emptySearchMsg = 'No items found', onClickLabel = undefined, inputProps = {}, addOption = false, isAlwaysVisible = false, resultsOnTop = false }: SearchComponentProps<T>) {
+  searchItem, setSearchItem, isLoading, isError, error, searchResult = [], emptySearchMsg = 'No items found', onClickLabel = undefined, inputProps = {}, addOption = false, isAlwaysVisible = false, resultsOnTop = false, style }: SearchComponentProps<T>) {
   const [isActive, setIsActive] = useState<boolean>(false)
 
   return (
@@ -59,10 +60,11 @@ function Search<T extends Searchable>({
         {isActive && searchResult.length === 0
           ? <p>{emptySearchMsg}</p>
           : (isAlwaysVisible || isActive) && (
-            <ul>
+            <ul className={`search_results ${style === 'select' ? 'search_results_select' : '' }`}>
               {searchResult.map(item =>
                 <li key={item.id}>
-                  <button 
+                  <button
+                    className={`search_results_item ${style === 'select' ? 'search_results_item_select' : '' }`}
                     type="button"   
                     onMouseDown={event => event.preventDefault()}
                     onClick={() => {

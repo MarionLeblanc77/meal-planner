@@ -1,3 +1,12 @@
-.active{
-  background-color: pink;
+.chip{
+  padding: 0.3rem;
+  border: none;
+  border-radius: 0.3rem;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+}
+
+.selected_chip{
+  background-color: rgb(144, 238, 144);
+  box-shadow: rgb(149, 223, 149) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
 }
