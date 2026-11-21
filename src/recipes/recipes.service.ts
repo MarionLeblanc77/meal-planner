@@ -56,8 +56,8 @@ export class RecipesService {
     const ingredientIds = [...new Set(searchRecipeDto.ingredientIds ?? [])];
     const hasAllIngredients = searchRecipeDto.hasAllIngredients;
     if (ingredientIds.length > 0) {
-      if (hasAllIngredients) {
-        query.andWhere('recipe.id IN (:...ingredientIds)', { ingredientIds });
+      if (!hasAllIngredients) {
+        query.andWhere('ingredient.id IN (:...ingredientIds)', { ingredientIds })
       } else {
         query.andWhere((qb) => {
           const matchingRecipes = qb
@@ -82,8 +82,8 @@ export class RecipesService {
     const categoryIds = [...new Set(searchRecipeDto.categoryIds ?? [])];
     const hasAllCategories = searchRecipeDto.hasAllCategories;
     if (categoryIds.length > 0) {
-      if (hasAllCategories) {
-        query.andWhere('recipe.id IN (:...categoryIds)', { categoryIds });
+      if (!hasAllCategories) {
+        query.andWhere('category.id IN (:...categoryIds)', { categoryIds })
       } else {
         query.andWhere((qb) => {
           const matchingRecipes = qb
