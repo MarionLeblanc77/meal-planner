@@ -16,6 +16,7 @@ function RecipeSearch() {
   const [searchedIngredientsList, setSearchedIngredientsList] = useState<IngredientInput[]>([])
   const [categoryChecked, setCategoryChecked] = useState<boolean>(false);
   const [searchedCategoriesList, setSearchedCategoriesList] = useState<CategoryInput[]>([])
+  const [seasonalityChecked, setSeasonalityChecked] = useState<boolean>(false);   
 
   const [searchRecipe, setSearchRecipe] = useState<string>('')
   const { 
@@ -28,7 +29,8 @@ function RecipeSearch() {
       ingredientIds: searchedIngredientsList.map((ingredient) => ingredient?.id).filter((id): id is number => !!id),
       hasAllIngredients: ingredientChecked,
       categoryIds: searchedCategoriesList.map((category) => category?.id).filter((id): id is number => !!id),
-      hasAllCategories: categoryChecked
+      hasAllCategories: categoryChecked,
+      onseason: seasonalityChecked
     }
   )
   const recipes = recipesData ?? []
@@ -107,7 +109,17 @@ function RecipeSearch() {
                 </li>
               ))}
             </ul>
-          </div>  
+          </div>
+          <div id="recipe_search_criteria_season" className="recipe_search_criteria_item">
+            <h3>Only show recipes with ingredient(s) in season</h3>
+            <div className="switch">
+              <Switch 
+                checked={seasonalityChecked} 
+                onChange={(e) => setSeasonalityChecked(e.target.checked)} 
+              />
+              <p>Yes</p>
+            </div>
+          </div>
         </div>
         <div id="recipe_search_results">
           <Search 

@@ -17,7 +17,11 @@ export class CategoriesService {
   }
 
   async findAll(): Promise<Category[]>  {
-    return await this.categoryRepository.find();
+    return await this.categoryRepository.find({
+      order: {
+        name: 'ASC',
+      },
+    });
   }
   
   async search(searchCategoryDto: PartialCategoryDto): Promise<Category[]> {

@@ -18,7 +18,11 @@ export class IngredientsService {
   }
 
   async findAll(): Promise<Ingredient[]> {
-    return await this.ingredientRepository.find();
+    return await this.ingredientRepository.find({
+      order: {
+        name: 'ASC',
+      },
+    });
   }
 
   async search(searchIngredientDto: SearchIngredientDto): Promise<Ingredient[]> {

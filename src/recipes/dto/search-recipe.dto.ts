@@ -26,4 +26,8 @@ export class SearchRecipeDto  {
     @IsOptional()
     @IsBoolean()
     hasAllCategories?: boolean = false;
+
+    @IsOptional()
+    @IsBoolean()
+    seasonality?: boolean = true;
 }

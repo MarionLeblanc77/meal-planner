@@ -19,7 +19,11 @@ export class RecipesService {
   }
 
   async findAll(): Promise<Recipe[]> {
-    return await this.recipeRepository.find();
+    return await this.recipeRepository.find({
+      order: {
+        name: 'ASC',
+      },
+    });
   }
   
   async search(searchRecipeDto: SearchRecipeDto): Promise<Recipe[]> {
@@ -31,6 +35,22 @@ export class RecipesService {
     const name = searchRecipeDto.name;
     if (name && name.trim() !== '') {
       query.where({ name: ILike(`%${name}%`) });
+    }
+
+    const seasonality = searchRecipeDto.seasonality;
+    if (seasonality) {
+        query.andWhere((qb) => {
+          const offSeasonIngredient = qb
+            .subQuery()
+            .select('1')
+            .from(Recipe, 'matchedRecipe')
+            .innerJoin('matchedRecipe.ingredients', 'matchedIngredient')
+            .where('matchedRecipe.id = recipe.id')
+            .andWhere('matchedIngredient.onSeason = false')
+            .getQuery();
+
+          return `NOT EXISTS ${offSeasonIngredient}`;
+      })
     }
 
     const ingredientIds = [...new Set(searchRecipeDto.ingredientIds ?? [])];
