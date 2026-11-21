@@ -16,8 +16,12 @@ Common decision 26/09/17 :
 
 ## Design / Features
 
-- (1) Change categories to be a visible clickable list and not a search
-- (2) Improve front design
+- (1) Change categories to be a visible clickable list and not a search for adding and modifying recipe form
+- (2) Improve front design :
+  - remove recipe list page and add an ingredient page
+  - groupe manual addition and import
+  - edit ingredient directly on list
+  - improve list & search edit in recipe edition
 - Portions of ingredients (how to handle units ? conversion info)
 - Instructions, temperature and mode, cooking time and total time, origin, comments
 - Think about exclusion on the filter (at least ingredient)
