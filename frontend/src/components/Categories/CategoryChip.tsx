@@ -3,7 +3,7 @@ import "./CategoryChip.css"
 
 interface CategoryChipProps {
   category: Category;
-  setSearchedCategoriesList: React.Dispatch<React.SetStateAction<CategoryInput[]>>
+  setSearchedCategoriesList: React.Dispatch<React.SetStateAction<CategoryInput[] | Category[]>>
   isActive: boolean;
 }
 

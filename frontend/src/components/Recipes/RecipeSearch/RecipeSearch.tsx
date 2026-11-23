@@ -96,7 +96,10 @@ function RecipeSearch() {
             <ul id="recipe_search_criteria_categories_list" className="chip_list">
               {categories.map((category) => (
                 <li key={category.id}>
-                  <CategoryChip category={category} setSearchedCategoriesList={setSearchedCategoriesList} isActive={searchedCategoriesList.includes(category)} />
+                  <CategoryChip 
+                    category={category} 
+                    setSearchedCategoriesList={setSearchedCategoriesList} 
+                    isActive={searchedCategoriesList.some((selected) => selected.id === category.id)} />
                 </li>
               ))}
             </ul>

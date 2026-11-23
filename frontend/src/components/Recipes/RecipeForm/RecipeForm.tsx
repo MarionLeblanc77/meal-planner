@@ -2,12 +2,14 @@ import { useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useSearchIngredients } from "../../../hooks/useIngredients";
 import { useCreateOrEditRecipe, useRecipe } from "../../../hooks/useRecipes";
-import { useSearchCategories } from "../../../hooks/useCategories";
+import { useCategories, useCreateOrEditCategory } from "../../../hooks/useCategories";
 import type { Recipe } from "../../../types/recipe";
 import type { IngredientInput } from "../../../types/ingredient";
+import type { Category, CategoryInput } from "../../../types/category";
 import type { ImportReviewState } from "../../../types/importer";
 import Search from "../../Search/Search";
 import "../RecipeImport/RecipeImport.css";
+import CategoryChip from "../../Categories/CategoryChip";
 
 function RecipeForm() {
   const navigate = useNavigate();
@@ -34,16 +36,32 @@ function RecipeForm() {
     }
   }
 
-  const [categories, setCategories] = useState<Recipe['categories']>(recipe?.categories ?? []);
-  const [searchedCategory, setSearchedCategory] = useState<string>('')
-  const { data : categoriesData, isLoading: isLoadingCategorySearch, isError: isErrorCategorySearch, error: errorCategorySearch } = useSearchCategories({ name: searchedCategory.trim().toLowerCase() })
-  const categoryList = categoriesData ?? []
+  const [categories, setCategories] = useState<Category[] | CategoryInput[]>(recipe?.categories ?? []);
 
-  const addCategory = ({searchedCategoryID, searchedCategory}: {searchedCategoryID: number | undefined, searchedCategory: string}) => {
-    if (searchedCategory.trim() !== '') {
-      const newCategory: IngredientInput = { id: searchedCategoryID, name: searchedCategory.trim() };
-      setCategories([...categories, newCategory]);      
+  const { data : existingCategoriesData, isLoading: isLoadingExistingCategories, isError: isErrorExistingCategories, error: errorExistingCategories } = useCategories()
+  const existingCategories = existingCategoriesData ?? [];
+
+  const [newCategory, setNewCategory] = useState<string>('');
+  const createOrEditCategory = useCreateOrEditCategory(undefined);
+
+  const addNewCategory = (newCategory : string) => {
+    const cleanedNewCategorie = newCategory.trim().toLowerCase()
+    const alreadyExistingCategory = existingCategories.find((category) => category.name == cleanedNewCategorie)
+    if (categories.find((category) => category.name == cleanedNewCategorie)){
+      //TODO! add a already selected message
+    } else if (alreadyExistingCategory) {
+        setCategories((prev)=> [...prev, alreadyExistingCategory])
+    } else {
+      createOrEditCategory.mutate({
+        name: cleanedNewCategorie
+      },
+      {
+        onSuccess: (createdCategory)=>{
+          setCategories((prev)=> [...prev, createdCategory])
+        }
+      })
     }
+    setNewCategory('')
   }
 
   if (isLoading) return <div className="spinner">Loading...</div>
@@ -147,27 +165,46 @@ function RecipeForm() {
           </label>
         </div>
         <div>
-          <label>Categories:
-            <Search 
-              searchItem={searchedCategory} 
-              setSearchItem={setSearchedCategory} 
-              isLoading={isLoadingCategorySearch} 
-              isError={isErrorCategorySearch} 
-              error={errorCategorySearch} 
-              searchResult={categoryList} 
-              emptySearchMsg="No categories found" 
-              onClickLabel={({searchItemID, searchItem}) => addCategory({searchedCategoryID : searchItemID, searchedCategory : searchItem})} 
-              inputProps={{ name: "category", id: "category" }}
-              addOption={true}
-             />
-            <ul>
-              {categories.map((category, index) => (
-                <li key={index}>
-                  {category.name}
-                  <button type="button" onClick={() => setCategories(categories.filter((_, i) => i !== index))}>X</button>
-                </li>
-              ))}
-            </ul>
+          <label>Categories:</label>
+          {isLoadingExistingCategories && <div className="spinner">Loading...</div>}
+          {isErrorExistingCategories && <div className="error">Error : {errorExistingCategories?.message}</div>}
+          <ul id="recipe_search_criteria_categories_list" className="chip_list">
+            {existingCategories.map((category) => (
+              <li key={category.id}>
+                <CategoryChip 
+                  category={category} 
+                  setSearchedCategoriesList={setCategories} 
+                  isActive={categories.some((selected) => selected.id === category.id)} />
+              </li>
+            ))}
+          </ul>
+          <label> Add a new category ?
+            <input 
+              type="text" 
+              name="category_name" 
+              id="category_name" 
+              value={newCategory}
+              onChange={e => setNewCategory(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter'){
+                  e.preventDefault()
+                  if (newCategory.trim() !== '') {
+                    addNewCategory(newCategory)
+                  }
+                }
+              }}
+            />
+            <button 
+              type="button"   
+              onMouseDown={event => event.preventDefault()}
+              onClick={() => {
+                if (newCategory.trim() !== '') {
+                  addNewCategory(newCategory)
+                }                
+              }}
+            >
+              +
+            </button>
           </label>
         </div>
         <button>{window.location.href.includes('edit') ? 'Update this recipe' : 'Add this recipe'}</button>
