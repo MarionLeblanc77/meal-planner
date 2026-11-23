@@ -36,14 +36,6 @@ cd .\frontend\
 npm run dev
 ```
 
-## DataBase
-
-```bash
-# xxxx
-xxxx
-
-```
-
 ## Run tests
 
 ```bash

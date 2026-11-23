@@ -7,7 +7,8 @@ import Search from "../../Search/Search"
 import "./RecipeSearch.css"
 import { useSearchIngredients } from "../../../hooks/useIngredients";
 import type { CategoryInput } from "../../../types/category";
-import { useSearchCategories } from "../../../hooks/useCategories";
+import { useCategories } from "../../../hooks/useCategories";
+import CategoryChip from "../../Categories/CategoryChip";
 
 function RecipeSearch() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ function RecipeSearch() {
       hasAllIngredients: ingredientChecked,
       categoryIds: searchedCategoriesList.map((category) => category?.id).filter((id): id is number => !!id),
       hasAllCategories: categoryChecked,
-      onseason: seasonalityChecked
+      seasonality: seasonalityChecked
     }
   )
   const recipes = recipesData ?? []
@@ -39,8 +40,7 @@ function RecipeSearch() {
   const { data : ingredientsData, isLoading: isLoadingIngredientSearch, isError: isErrorIngredientSearch, error: errorIngredientSearch } = useSearchIngredients({ name: searchIngredient.trim().toLowerCase() }, searchedIngredientsList);
   const ingredients = ingredientsData ?? []
 
-  const [searchCategory, setSearchCategory] = useState<string>('')
-  const { data : categoriesData, isLoading: isLoadingCategorySearch, isError: isErrorCategorySearch, error: errorCategorySearch } = useSearchCategories({ name: searchCategory.trim().toLowerCase() })
+  const { data : categoriesData, isLoading: isLoadingCategorySearch, isError: isErrorCategorySearch, error: errorCategorySearch } = useCategories()
   const categories = categoriesData ?? []
 
   return (
@@ -62,6 +62,7 @@ function RecipeSearch() {
               onClickLabel={({searchItemID, searchItem}) => {setSearchedIngredientsList([...searchedIngredientsList, {name: searchItem, id: searchItemID}])}} 
               inputProps={{ name: "ingredient", id: "ingredient" }}
               resultsOnTop={true}
+              style='select'
              />
             <div className="switch">
               <p>Or</p>
@@ -81,18 +82,9 @@ function RecipeSearch() {
             </ul>
           </div>
           <div id="recipe_search_criteria_categories" className="recipe_search_criteria_item">
-            <h3>With this/those category(ies):</h3>
-            <Search 
-              searchItem={searchCategory} 
-              setSearchItem={setSearchCategory} 
-              isLoading={isLoadingCategorySearch} 
-              isError={isErrorCategorySearch} 
-              error={errorCategorySearch} 
-              searchResult={categories} 
-              emptySearchMsg="No categories found" 
-              onClickLabel={({searchItemID, searchItem}) => {setSearchedCategoriesList([...searchedCategoriesList, {name: searchItem, id: searchItemID}])}} 
-              inputProps={{ name: "category", id: "category" }}
-             />
+            <h3>With this/those category(ies):</h3>            
+            {isLoadingCategorySearch && <div className="spinner">Loading...</div>}
+            {isErrorCategorySearch && <div className="error">Error : {errorCategorySearch?.message}</div>}            
             <div className="switch">
               <p>Or</p>
               <Switch 
@@ -101,11 +93,13 @@ function RecipeSearch() {
               />
               <p>And</p>
             </div>
-            <ul id="recipe_search_criteria_categories_list">
-              {searchedCategoriesList.map((category) => (
+            <ul id="recipe_search_criteria_categories_list" className="chip_list">
+              {categories.map((category) => (
                 <li key={category.id}>
-                  {category.name}
-                  <button onClick={() => setSearchedCategoriesList(searchedCategoriesList.filter((c) => c.id !== category.id))}>X</button>
+                  <CategoryChip 
+                    category={category} 
+                    setSearchedCategoriesList={setSearchedCategoriesList} 
+                    isActive={searchedCategoriesList.some((selected) => selected.id === category.id)} />
                 </li>
               ))}
             </ul>

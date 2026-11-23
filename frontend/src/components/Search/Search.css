@@ -3,3 +3,31 @@
   background-color: white;
   z-index: 1;
 }
+
+.search_results{
+  list-style-type: none;
+  text-align: left;
+  padding: 0;
+}
+
+.search_results_select{
+  max-height: 200px;
+  overflow-y: auto;
+  margin: 0;
+}
+
+.search_results_item{
+  width: 100%;
+  border: none;
+  text-align: left;
+  background-color: white;
+  padding: 0.3rem;
+  &:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+  }
+}
+
+.search_results_item_select{
+  border: lightgray solid 0.5px;
+}

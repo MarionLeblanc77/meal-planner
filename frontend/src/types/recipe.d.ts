@@ -21,5 +21,5 @@ export type RecipeInput = {
   categories?: Recipe['categories']
   categoryIds?: number[]
   hasAllCategories?: boolean
-  onseason?: boolean
+  seasonality?: boolean
 }
