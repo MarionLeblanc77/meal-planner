@@ -63,11 +63,11 @@ async function createOrEditIngredient(id: number | undefined, ingredientData: In
   return result.data;
 }
 
-export function useCreateOrEditIngredient(id: number | undefined) {
+export function useCreateOrEditIngredient() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (ingredientData: IngredientInput) => createOrEditIngredient(id, ingredientData),
+    mutationFn: ({id, ingredientData} : {id : number | undefined, ingredientData: IngredientInput }) => createOrEditIngredient(id, ingredientData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ingredients'] })
     },

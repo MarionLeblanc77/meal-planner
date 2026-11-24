@@ -7,7 +7,7 @@ function IngredientForm() {
   const { ingredientId } = useParams();
   const { data: ingredient, isLoading, isError, error, isFetching } = useIngredient(ingredientId ? parseInt(ingredientId) : undefined);
   
-  const createOrEditIngredient = useCreateOrEditIngredient(ingredientId ? parseInt(ingredientId) : undefined);
+  const createOrEditIngredient = useCreateOrEditIngredient();
 
   if (isLoading) return <div className="spinner">Loading...</div>
   if (isError) return <div className="error">Error : {error.message}</div>
@@ -16,8 +16,11 @@ function IngredientForm() {
     e.preventDefault()
     const formData = new FormData(e.currentTarget);
     createOrEditIngredient.mutate({
-      name: formData.get('name') as Ingredient['name'],
-      onSeason: formData.get('onSeason') === "on" ? true : false as Ingredient['onSeason'],
+      id : ingredientId ? parseInt(ingredientId) : undefined,
+      ingredientData : {
+        name: formData.get('name') as Ingredient['name'],
+        onSeason: formData.get('onSeason') === "on" ? true : false as Ingredient['onSeason'],
+      }
     })
     navigate('/ingredients');
   }

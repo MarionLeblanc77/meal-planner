@@ -8,7 +8,7 @@
 
 - (1) Improve front design :
   - edit ingredient directly on list
-  - improve list & search edit in recipe edition
+  - improve ingredient list visual in recipe search, edition
 - (3) Source of recipe
 - Portions of ingredients (how to handle units ? conversion info)
 - Instructions, temperature and mode, cooking time and total time, origin, comments

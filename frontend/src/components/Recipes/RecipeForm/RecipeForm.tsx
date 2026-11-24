@@ -7,7 +7,7 @@ import type { Recipe } from "../../../types/recipe";
 import type { IngredientInput } from "../../../types/ingredient";
 import type { Category, CategoryInput } from "../../../types/category";
 import type { ImportReviewState } from "../../../types/importer";
-import Search from "../../Search/Search";
+import Search from "../../DesignFeatures/Search/Search";
 import CategoryChip from "../../Categories/CategoryChip";
 import "../RecipeAdd/RecipeImport/RecipeImport.css";
 
