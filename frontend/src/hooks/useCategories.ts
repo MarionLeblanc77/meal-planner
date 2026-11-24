@@ -49,11 +49,11 @@ async function createOrEditCategory(id: number | undefined, categoryData: Catego
   return result.data;
 }
 
-export function useCreateOrEditCategory(id: number | undefined) {
+export function useCreateOrEditCategory() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (categoryData: CategoryInput) => createOrEditCategory(id, categoryData),
+    mutationFn: ({id, categoryData} : {id : number | undefined, categoryData : CategoryInput}) => createOrEditCategory(id, categoryData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] })
     },

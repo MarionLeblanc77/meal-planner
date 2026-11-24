@@ -22,3 +22,24 @@
   border: none;
   background-color: transparent;
 }
+
+
+
+.list_line{
+  vertical-align: baseline;
+}
+
+.list_line_name,
+.list_line_name_edit_field {
+  display: flex;
+  align-items: center;
+}
+
+.list_line_name {
+  justify-content: flex-end;
+  margin-right: 1.5rem;
+}
+
+.button_ongoing{
+  display: none;
+}

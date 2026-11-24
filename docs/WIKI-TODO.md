@@ -7,14 +7,14 @@
 ## Diverse Design / Features
 
 - (1) Improve front design :
-  - edit ingredient directly on list
-  - improve ingredient list visual in recipe search, edition
+  - improve ingredient list visual in recipe search and recipe edition
 - (3) Source of recipe
 - Portions of ingredients (how to handle units ? conversion info)
 - Instructions, temperature and mode, cooking time and total time, origin, comments
 - Think about exclusion on the filters (at least ingredient)
 - Last added, last seen and top used the past rolling 6 months on the meal planning page
 - Equipement options in search
+- Make CategoryChip a DesignFeature ?
 
 ## Translation
 

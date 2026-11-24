@@ -29,10 +29,10 @@ function Ingredients() {
         </thead>
         <tbody>
           {data?.map((ingredient: Ingredient) => (            
-            <tr className="ingredients_line" key={ingredient.id}>
-              <td className="ingredients_name">
+            <tr className="list_line" key={ingredient.id}>
+              <td className="list_line_name">
                 {ingredient.id === onGoingEditingIngredientId ?
-                <div className="ingredients_name_edit_field">
+                <div className="list_line_name_edit_field">
                   <input 
                     type="text"
                     value={onGoingDraftIngredientName}
@@ -66,7 +66,7 @@ function Ingredients() {
                 : <p>{ingredient.name}</p>
                 }
                 <button
-                  className={`naked_button ${ingredient.id === onGoingEditingIngredientId ? "button_ongoing_ingredient" : ""}`}
+                  className={`naked_button ${ingredient.id === onGoingEditingIngredientId ? "button_ongoing" : ""}`}
                   type="button" 
                   onClick={(e)=>{
                     e.preventDefault()
