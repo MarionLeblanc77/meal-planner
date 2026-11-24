@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { useCategories, useDeleteCategory } from "../../hooks/useCategories.js";
 import type { Category } from "../../types/category.js";
 
@@ -22,11 +21,7 @@ function Categories() {
         <tbody>
           {data?.map((category: Category) => (
             <tr key={category.id}>
-              <td>
-                <Link to={`/categories/${category.id}`}>
-                  {category.name}
-                </Link>
-              </td>
+              <td>{category.name}</td>
               {/* TODO?: Make a unique delete button component if it makes sens visually */}
               <td>
                 <button type="button" onClick={() => deleteCategory.mutate(category.id)}>X</button>
