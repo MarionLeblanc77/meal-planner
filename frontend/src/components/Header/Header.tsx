@@ -13,22 +13,6 @@ export default function Header() {
         Home
       </NavLink>
       <NavLink
-        to="/recipes"
-        className={({ isActive }) =>
-          isActive ? "active" : ""
-        }
-      >
-        Recipes list
-      </NavLink>
-      <NavLink
-        to="/recipes/import"
-        className={({ isActive }) =>
-          isActive ? "active" : ""
-        }
-      >
-        Import a recipe
-      </NavLink>
-      <NavLink
         to="/recipes/add"
         className={({ isActive }) =>
           isActive ? "active" : ""
@@ -43,14 +27,6 @@ export default function Header() {
         }
       >
         Ingredients list
-      </NavLink>
-      <NavLink
-        to="/ingredients/add"
-        className={({ isActive }) =>
-          isActive ? "active" : ""
-        }
-      >
-        Add an ingredient
       </NavLink>
       <NavLink
         to="/categories"

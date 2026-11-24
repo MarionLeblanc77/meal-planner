@@ -8,8 +8,8 @@ import type { IngredientInput } from "../../../types/ingredient";
 import type { Category, CategoryInput } from "../../../types/category";
 import type { ImportReviewState } from "../../../types/importer";
 import Search from "../../Search/Search";
-import "../RecipeImport/RecipeImport.css";
 import CategoryChip from "../../Categories/CategoryChip";
+import "../RecipeAdd/RecipeImport/RecipeImport.css";
 
 function RecipeForm() {
   const navigate = useNavigate();

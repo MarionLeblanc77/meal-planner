@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { importErrorMessage, useImportRecipe, useLastImport } from "../../../hooks/useImporter"
-import type { ImportResult, ImportReviewState } from "../../../types/importer"
+import { importErrorMessage, useImportRecipe, useLastImport } from "../../../../hooks/useImporter"
+import type { ImportResult, ImportReviewState } from "../../../../types/importer"
 import "./RecipeImport.css"
 
 const ACCEPTED_FILES = "image/jpeg,image/png,image/webp,image/gif,application/pdf"
@@ -53,8 +53,6 @@ function RecipeImport() {
 
   return (
     <div className="recipe-import">
-      <h1>Import a recipe</h1>
-
       <form className="form" onSubmit={submitUrl}>
         <label>
           From a web page:

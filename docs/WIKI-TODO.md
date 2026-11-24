@@ -7,8 +7,6 @@
 ## Diverse Design / Features
 
 - (1) Improve front design :
-  - remove recipe list page and add an ingredient page
-  - groupe manual addition and import
   - edit ingredient directly on list
   - improve list & search edit in recipe edition
 - (3) Source of recipe
