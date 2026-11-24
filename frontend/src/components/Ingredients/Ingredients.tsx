@@ -1,8 +1,9 @@
+import { useState } from "react";
+import { MdCheck, MdClose, MdDeleteForever, MdEdit } from "react-icons/md";
 import { useIngredients, useDeleteIngredient, useCreateOrEditIngredient } from "../../hooks/useIngredients";
 import type { Ingredient } from "../../types/ingredient";
-import './Ingredients.css'
 import AppSwitch from "../DesignFeatures/AppSwitch/AppSwitch";
-import { useState } from "react";
+import './Ingredients.css'
 
 function Ingredients() {
   const { data, isLoading, isError, error, isFetching } = useIngredients()
@@ -28,16 +29,17 @@ function Ingredients() {
         </thead>
         <tbody>
           {data?.map((ingredient: Ingredient) => (            
-            <tr key={ingredient.id}>
-              <td>
+            <tr className="ingredients_line" key={ingredient.id}>
+              <td className="ingredients_name">
                 {ingredient.id === onGoingEditingIngredientId ?
-                <div>
+                <div className="ingredients_name_edit_field">
                   <input 
                     type="text"
                     value={onGoingDraftIngredientName}
                     onChange={(e)=>setOnGoingDraftIngredientName(e.currentTarget.value)}
                   />
                   <button
+                    className="naked_button"
                     onClick={(e)=>{
                       e.preventDefault()
                       editIngredient.mutate({
@@ -48,28 +50,37 @@ function Ingredients() {
                       setOnGoingEditingIngredientId(null)
                     }}
                   >
-                    Yes
+                    <MdCheck size={"1.3rem"} color="green"/>
                   </button>
                   <button
+                    className="naked_button"
                     onClick={(e)=>{
                       e.preventDefault()
                       setOnGoingDraftIngredientName('');
                       setOnGoingEditingIngredientId(null)
                     }}
                   >
-                    No
+                    <MdClose size={"1.3rem"} color="red"/>
                   </button>
                 </div>
                 : <p>{ingredient.name}</p>
                 }
                 <button
+                  className={`naked_button ${ingredient.id === onGoingEditingIngredientId ? "button_ongoing_ingredient" : ""}`}
+                  type="button" 
                   onClick={(e)=>{
                     e.preventDefault()
                     setOnGoingDraftIngredientName(ingredient.name);
                     setOnGoingEditingIngredientId(ingredient.id)
                   }}
                 >
-                  Edit
+                  <MdEdit size={"1.3rem"}/>
+                </button>
+                <button 
+                  className={`naked_button ${ingredient.id === onGoingEditingIngredientId ? "button_ongoing_ingredient" : ""}`}
+                  type="button" 
+                  onClick={() => deleteIngredient.mutate(ingredient.id)}>
+                  <MdDeleteForever size={"1.3rem"}/>
                 </button>
               </td>
               <td>
@@ -84,10 +95,6 @@ function Ingredients() {
                     })
                   }
                   />
-              </td>
-              {/* TODO?: Make a unique delete button component if it makes sens visually */}
-              <td>
-                <button type="button" onClick={() => deleteIngredient.mutate(ingredient.id)}>X</button>
               </td>
             </tr>
           ))}

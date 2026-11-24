@@ -4,3 +4,22 @@
 .not-season{
   background-color: lightcoral;
 }
+
+.ingredients_line{
+  vertical-align: baseline;
+}
+
+.ingredients_name,
+.ingredients_name_edit_field {
+  display: flex;
+  align-items: center;
+}
+
+.ingredients_name {
+  justify-content: flex-end;
+  margin-right: 1.5rem;
+}
+
+.button_ongoing_ingredient{
+  display: none;
+}
