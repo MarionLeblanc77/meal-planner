@@ -1,6 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDeleteRecipe, useRecipe } from "../../../hooks/useRecipes";
 import recipeStatusLabels from "../../../types/recipe-status";
+import CustomChip from "../../CustomDesignFeatures/CustomChips/CustomChip";
 
 function Recipe() {
   const { recipeId } = useParams();
@@ -26,14 +27,24 @@ function Recipe() {
               }} >X</button>
               <p> Base Portions: {recipe.basePortions}</p>
               <p> Status: {recipeStatusLabels[recipe.status]}</p>
-              <ul>
+              <h3>Ingredients:</h3>
+              <ul className="chip_list">
                 {recipe.ingredients.map((ingredient) => (
-                  <li key={ingredient.id}>{ingredient.name}</li>
+                  <li key={ingredient.id}>
+                    <CustomChip
+                      object={ingredient}
+                      />
+                  </li>
                 ))}
               </ul>
-              <ul>
+              <h3>Categories:</h3>
+              <ul className="chip_list">
                 {recipe.categories.map((category) => (
-                  <li key={category.id}>{category.name}</li>
+                  <li key={category.id}>
+                    <CustomChip
+                      object={category}
+                      />
+                  </li>
                 ))}
               </ul>
           </div>

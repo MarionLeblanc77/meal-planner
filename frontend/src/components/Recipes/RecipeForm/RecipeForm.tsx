@@ -5,11 +5,12 @@ import { useCreateOrEditRecipe, useRecipe } from "../../../hooks/useRecipes";
 import { useCategories, useCreateOrEditCategory } from "../../../hooks/useCategories";
 import type { Recipe } from "../../../types/recipe";
 import type { IngredientInput } from "../../../types/ingredient";
-import type { Category, CategoryInput } from "../../../types/category";
+import type { Category } from "../../../types/category";
 import type { ImportReviewState } from "../../../types/importer";
-import Search from "../../DesignFeatures/Search/Search";
-import CategoryChip from "../../Categories/CategoryChip";
+import CustomSearch from "../../CustomDesignFeatures/CustomSearch/CustomSearch";
+import CustomOnOffChip from "../../CustomDesignFeatures/CustomChips/CustomOnOffChip";
 import "../RecipeAdd/RecipeImport/RecipeImport.css";
+import CustomDeletableChip from "../../CustomDesignFeatures/CustomChips/CustomDeletableChip";
 
 function RecipeForm() {
   const navigate = useNavigate();
@@ -36,13 +37,13 @@ function RecipeForm() {
     }
   }
 
-  const [categories, setCategories] = useState<Category[] | CategoryInput[]>(recipe?.categories ?? []);
+  const [categories, setCategories] = useState<Category[]>(recipe?.categories ?? []);
 
   const { data : existingCategoriesData, isLoading: isLoadingExistingCategories, isError: isErrorExistingCategories, error: errorExistingCategories } = useCategories()
   const existingCategories = existingCategoriesData ?? [];
 
   const [newCategory, setNewCategory] = useState<string>('');
-  const createOrEditCategory = useCreateOrEditCategory(undefined);
+  const createOrEditCategory = useCreateOrEditCategory();
 
   const addNewCategory = (newCategory : string) => {
     const cleanedNewCategorie = newCategory.trim().toLowerCase()
@@ -53,7 +54,10 @@ function RecipeForm() {
         setCategories((prev)=> [...prev, alreadyExistingCategory])
     } else {
       createOrEditCategory.mutate({
-        name: cleanedNewCategorie
+        id: undefined,
+        categoryData : {
+          name: cleanedNewCategorie
+        }
       },
       {
         onSuccess: (createdCategory)=>{
@@ -135,7 +139,7 @@ function RecipeForm() {
         </div>
         <div>
           <label>Ingredients:
-            <Search 
+            <CustomSearch 
               searchItem={searchedIngredient} 
               setSearchItem={setSearchedIngredient} 
               isLoading={isLoadingIngredientSearch} 
@@ -143,22 +147,24 @@ function RecipeForm() {
               error={errorIngredientSearch} 
               searchResult={ingredientList} 
               emptySearchMsg="No ingredients found" 
-              onClickLabel={({searchItemID, searchItem}) => addIngredient({searchedIngredientID : searchItemID, searchedIngredient : searchItem})} 
+              onSelectItem={({searchItemID, searchItem}) => addIngredient({searchedIngredientID : searchItemID, searchedIngredient : searchItem})} 
               inputProps={{ name: "ingredient", id: "ingredient" }}
               addOption={true}
               resultsOnTop={true}
              />
-            <ul>
+            <ul className="chip_list">
               {ingredients.map((ingredient, index) => (
                 <li key={index}>
-                  {ingredient.name}
+                  <CustomDeletableChip
+                    object={ingredient}
+                    deleteAction={() => setIngredients(ingredients.filter((_, i) => i !== index))}
+                    />
                   {ingredient.isNew && <span className="ingredient-new" title="Will be created as a new ingredient">new</span>}
                   {(ingredient.quantity || ingredient.originalName || ingredient.group) && (
                     <span className="ingredient-detail">
                       {[ingredient.quantity, ingredient.originalName && `"${ingredient.originalName}"`, ingredient.group].filter(Boolean).join(" · ")}
                     </span>
                   )}
-                  <button type="button" onClick={() => setIngredients(ingredients.filter((_, i) => i !== index))}>X</button>
                 </li>
               ))}
             </ul>
@@ -171,9 +177,9 @@ function RecipeForm() {
           <ul id="recipe_search_criteria_categories_list" className="chip_list">
             {existingCategories.map((category) => (
               <li key={category.id}>
-                <CategoryChip 
-                  category={category} 
-                  setSearchedCategoriesList={setCategories} 
+                <CustomOnOffChip 
+                  object={category} 
+                  onClickAction={setCategories} 
                   isActive={categories.some((selected) => selected.id === category.id)} />
               </li>
             ))}

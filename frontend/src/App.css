@@ -18,12 +18,21 @@
   list-style-type: none;
 }
 
+.switch {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   gap: 0.5rem;
+}
+
 .naked_button{
   border: none;
   background-color: transparent;
 }
 
-
+.onHover{
+  display: none;
+}
 
 .list_line{
   vertical-align: baseline;

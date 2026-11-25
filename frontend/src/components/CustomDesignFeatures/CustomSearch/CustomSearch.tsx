@@ -1,6 +1,6 @@
 import {useState } from 'react'
-import type { Searchable } from '../../types/search'
-import './Search.css'
+import type { Searchable } from '../../../types/search'
+import './CustomSearch.css'
 
 interface SearchComponentProps<Searchable> {
   searchItem: string;
@@ -10,7 +10,8 @@ interface SearchComponentProps<Searchable> {
   error: Error | null;
   searchResult: Searchable[];
   emptySearchMsg: string;
-  onClickLabel?: ({searchItemID, searchItem}: {searchItemID: number | undefined, searchItem: string}) => void | undefined | Promise<void>;
+  onCreateItem?: ({searchItemID, searchItem}: {searchItemID: number | undefined, searchItem: string}) => void | undefined | Promise<void>;
+  onSelectItem?: ({searchItemID, searchItem}: {searchItemID: number, searchItem: string}) => void | undefined | Promise<void>;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
   addOption?: boolean;
   isAlwaysVisible?: boolean;
@@ -18,8 +19,8 @@ interface SearchComponentProps<Searchable> {
   style?: string;
 }
 
-function Search<T extends Searchable>({ 
-  searchItem, setSearchItem, isLoading, isError, error, searchResult = [], emptySearchMsg = 'No items found', onClickLabel = undefined, inputProps = {}, addOption = false, isAlwaysVisible = false, resultsOnTop = false, style }: SearchComponentProps<T>) {
+function CustomSearch<T extends Searchable>({ 
+  searchItem, setSearchItem, isLoading, isError, error, searchResult = [], emptySearchMsg = 'No items found', onCreateItem = undefined, onSelectItem = undefined, inputProps = {}, addOption = false, isAlwaysVisible = false, resultsOnTop = false, style }: SearchComponentProps<T>) {
   const [isActive, setIsActive] = useState<boolean>(false)
 
   return (
@@ -36,7 +37,7 @@ function Search<T extends Searchable>({
           if (e.key === 'Enter'){
             e.preventDefault()
             if (searchItem.trim() !== '' && addOption) {
-              onClickLabel?.({searchItemID: undefined, searchItem})
+              onCreateItem?.({searchItemID: undefined, searchItem})
               setSearchItem('')
             }
           }
@@ -49,7 +50,7 @@ function Search<T extends Searchable>({
           type="button"   
           onMouseDown={event => event.preventDefault()}
           onClick={() => {
-            onClickLabel?.({searchItemID: undefined, searchItem})
+            onCreateItem?.({searchItemID: undefined, searchItem})
             setSearchItem('')
           }}
         >
@@ -68,7 +69,7 @@ function Search<T extends Searchable>({
                     type="button"   
                     onMouseDown={event => event.preventDefault()}
                     onClick={() => {
-                      onClickLabel?.({searchItemID: item.id, searchItem: item.name})
+                      onSelectItem?.({searchItemID: item.id, searchItem: item.name})
                       setSearchItem('')
                     }}
                   >
@@ -84,4 +85,4 @@ function Search<T extends Searchable>({
   )
 }
 
-export default Search
+export default CustomSearch

@@ -10,3 +10,24 @@
   background-color: rgb(144, 238, 144);
   box-shadow: rgb(149, 223, 149) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
 }
+
+.chip_deletable:hover{
+  background-color: lightcoral;
+}
+
+.chip_deletable:hover .onHover{
+  display: inline;
+}
+
+.chip_deletable_text {
+  display: inline-flex;
+  align-items: center;
+}
+
+.chip_deletable_text .onHover {
+  align-items: center;
+}
+
+.chip_deletable:hover .chip_deletable_text .onHover {
+  display: inline-flex;
+}

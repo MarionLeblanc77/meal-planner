@@ -1,13 +1,13 @@
 import Switch from '@mui/material/Switch';
 
-interface AppSwitchProps {
+interface CustomSwitchProps {
   textLeft?: string,
   textRight?: string,
   checkedValue : boolean,
   checkedSetter : (checked:boolean) => void
 }
             
-function AppSwitch({textLeft, textRight, checkedValue, checkedSetter} : AppSwitchProps) {
+function CustomSwitch({textLeft, textRight, checkedValue, checkedSetter} : CustomSwitchProps) {
   return (
   <div className="switch">
     <p>{textLeft}</p>
@@ -20,5 +20,5 @@ function AppSwitch({textLeft, textRight, checkedValue, checkedSetter} : AppSwitc
   )
 } 
 
-export default AppSwitch
+export default CustomSwitch
             

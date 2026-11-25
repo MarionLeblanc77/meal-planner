@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MdCheck, MdClose, MdDeleteForever, MdEdit } from "react-icons/md";
 import { useIngredients, useDeleteIngredient, useCreateOrEditIngredient } from "../../hooks/useIngredients";
 import type { Ingredient } from "../../types/ingredient";
-import AppSwitch from "../DesignFeatures/AppSwitch/AppSwitch";
+import CustomSwitch from "../CustomDesignFeatures/CustomSwitch/CustomSwitch";
 import './Ingredients.css'
 
 function Ingredients() {
@@ -84,7 +84,7 @@ function Ingredients() {
                 </button>
               </td>
               <td>
-                <AppSwitch
+                <CustomSwitch
                   textLeft="No"
                   textRight="Yes"
                   checkedValue={ingredient.onSeason ?? true}

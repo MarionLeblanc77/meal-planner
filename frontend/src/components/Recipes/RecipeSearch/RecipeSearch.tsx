@@ -1,22 +1,23 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { useSearchRecipes } from "../../../hooks/useRecipes";
-import type { IngredientInput } from "../../../types/ingredient";
-import Search from "../../DesignFeatures/Search/Search"
-import AppSwitch from "../../DesignFeatures/AppSwitch/AppSwitch";
+import type { Ingredient } from "../../../types/ingredient";
+import CustomSearch from "../../CustomDesignFeatures/CustomSearch/CustomSearch"
+import CustomSwitch from "../../CustomDesignFeatures/CustomSwitch/CustomSwitch";
 import { useSearchIngredients } from "../../../hooks/useIngredients";
-import type { CategoryInput } from "../../../types/category";
+import type { Category } from "../../../types/category";
 import { useCategories } from "../../../hooks/useCategories";
-import CategoryChip from "../../Categories/CategoryChip";
+import CustomOnOffChip from "../../CustomDesignFeatures/CustomChips/CustomOnOffChip";
+import CustomDeletableChip from "../../CustomDesignFeatures/CustomChips/CustomDeletableChip";
 import "./RecipeSearch.css"
 
 function RecipeSearch() {
   const navigate = useNavigate();
 
   const [ingredientChecked, setIngredientChecked] = useState<boolean>(false);
-  const [searchedIngredientsList, setSearchedIngredientsList] = useState<IngredientInput[]>([])
+  const [searchedIngredientsList, setSearchedIngredientsList] = useState<Ingredient[]>([])
   const [categoryChecked, setCategoryChecked] = useState<boolean>(false);
-  const [searchedCategoriesList, setSearchedCategoriesList] = useState<CategoryInput[]>([])
+  const [searchedCategoriesList, setSearchedCategoriesList] = useState<Category[]>([])
   const [seasonalityChecked, setSeasonalityChecked] = useState<boolean>(false);   
 
   const [searchRecipe, setSearchRecipe] = useState<string>('')
@@ -45,36 +46,38 @@ function RecipeSearch() {
 
   return (
     <>    
-      <h2>Search a Recipe</h2>
+      <h2>CustomSearch a Recipe</h2>
       <div id="recipe_search">
         <div id="recipe_search_criteria">
           <h2>Add criteria</h2>
           <div id="recipe_search_criteria_ingredients" className="recipe_search_criteria_item">
             <h3>With this/those ingredient(s):</h3>
-            <Search 
+            <CustomSearch 
               searchItem={searchIngredient} 
               setSearchItem={setSearchIngredient} 
-              isLoading={isLoadingIngredientSearch} 
+              isLoading={isLoadingIngredientSearch}
               isError={isErrorIngredientSearch} 
               error={errorIngredientSearch} 
               searchResult={ingredients} 
               emptySearchMsg="No ingredients found" 
-              onClickLabel={({searchItemID, searchItem}) => {setSearchedIngredientsList([...searchedIngredientsList, {name: searchItem, id: searchItemID}])}} 
+              onSelectItem={({searchItemID, searchItem}) => {setSearchedIngredientsList([...searchedIngredientsList, {name: searchItem, id: searchItemID}])}} 
               inputProps={{ name: "ingredient", id: "ingredient" }}
               resultsOnTop={true}
               style='select'
             />
-            <AppSwitch 
+            <CustomSwitch 
               textLeft="Or" 
               textRight="And"
               checkedValue={ingredientChecked}
               checkedSetter={setIngredientChecked}
             />
-            <ul id="recipe_search_criteria_ingredients_list">
+            <ul id="recipe_search_criteria_ingredients_list" className="chip_list">
               {searchedIngredientsList.map((ingredient) => (
                 <li key={ingredient.id}>
-                  {ingredient.name}
-                  <button onClick={() => setSearchedIngredientsList(searchedIngredientsList.filter((i) => i.id !== ingredient.id))}>X</button>
+                  <CustomDeletableChip
+                    object={ingredient}
+                    deleteAction={() => setSearchedIngredientsList(searchedIngredientsList.filter((i) => i.id !== ingredient.id))}   
+                    />                 
                 </li>
               ))}
             </ul>
@@ -83,7 +86,7 @@ function RecipeSearch() {
             <h3>With this/those category(ies):</h3>            
             {isLoadingCategorySearch && <div className="spinner">Loading...</div>}
             {isErrorCategorySearch && <div className="error">Error : {errorCategorySearch?.message}</div>}
-            <AppSwitch 
+            <CustomSwitch 
               textLeft="Or" 
               textRight="And"
               checkedValue={categoryChecked}
@@ -92,9 +95,9 @@ function RecipeSearch() {
             <ul id="recipe_search_criteria_categories_list" className="chip_list">
               {categories.map((category) => (
                 <li key={category.id}>
-                  <CategoryChip 
-                    category={category} 
-                    setSearchedCategoriesList={setSearchedCategoriesList} 
+                  <CustomOnOffChip 
+                    object={category} 
+                    onClickAction={setSearchedCategoriesList} 
                     isActive={searchedCategoriesList.some((selected) => selected.id === category.id)} />
                 </li>
               ))}
@@ -102,7 +105,7 @@ function RecipeSearch() {
           </div>
           <div id="recipe_search_criteria_season" className="recipe_search_criteria_item">
             <h3>Only show recipes with ingredient(s) in season</h3>
-            <AppSwitch
+            <CustomSwitch
               textRight="Yes"
               checkedValue={seasonalityChecked}
               checkedSetter={setSeasonalityChecked}
@@ -110,7 +113,7 @@ function RecipeSearch() {
           </div>
         </div>
         <div id="recipe_search_results">
-          <Search 
+          <CustomSearch 
             searchItem={searchRecipe} 
             setSearchItem={setSearchRecipe} 
             isLoading={isLoadingRecipeSearch} 
@@ -118,7 +121,7 @@ function RecipeSearch() {
             error={errorRecipeSearch} 
             searchResult={recipes} 
             emptySearchMsg="No recipes found" 
-            onClickLabel={({searchItemID}) => navigate(`/recipes/${searchItemID}`)} 
+            onSelectItem={({searchItemID}) => navigate(`/recipes/${searchItemID}`)} 
             inputProps={{ name: "recipe", id: "recipe" }}
             isAlwaysVisible={true}
           />

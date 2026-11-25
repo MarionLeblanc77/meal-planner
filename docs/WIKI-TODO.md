@@ -2,19 +2,18 @@
 
 ## Fixes
 
-- (2) Handle ingredients and categories names as lowercase trimed in back and style with uppercase in front
+- (1) Handle ingredients and categories names as lowercase trimed in back and style with uppercase in front
 
 ## Diverse Design / Features
 
-- (1) Improve front design :
-  - improve ingredient list visual in recipe search and recipe edition
-- (3) Source of recipe
-- Portions of ingredients (how to handle units ? conversion info)
-- Instructions, temperature and mode, cooking time and total time, origin, comments
+- (2) Add Source of recipe
+- (3) Instructions, temperature and mode, cooking time and total time, origin, comments (all recipe fields, info but picture)
+- (4) Add Portions of ingredients (how to handle units ? conversion info)
+- (5) Add user system
 - Think about exclusion on the filters (at least ingredient)
 - Last added, last seen and top used the past rolling 6 months on the meal planning page
 - Equipement options in search
-- Make CategoryChip a DesignFeature ?
+- Make CustomOnOffChip a CustomDesignFeature ?
 
 ## Translation
 

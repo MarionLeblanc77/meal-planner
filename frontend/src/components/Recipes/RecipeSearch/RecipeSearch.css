@@ -23,10 +23,3 @@
 .recipe_search_criteria_item {
    margin-bottom: 1rem;
 }
-
-.switch {
-   display: flex;
-   flex-direction: row;
-   align-items: center;
-   gap: 0.5rem;
-}
